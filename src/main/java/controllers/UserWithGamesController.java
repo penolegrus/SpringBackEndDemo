@@ -30,7 +30,7 @@ public class UserWithGamesController {
         //колхозный вариант просмотра игр у пользователя под определенным токеном авторизации
 
         //получаем юзера по айдишке
-        User user = UserDataBase.getUser(1);
+        User user = UserDataBase.getUser(id);
 
         JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
 

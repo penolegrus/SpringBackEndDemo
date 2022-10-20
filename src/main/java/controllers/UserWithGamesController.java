@@ -14,15 +14,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
 import static helpers.Constants.GAME_API_URL;
-
+@RestController
 public class UserWithGamesController {
-    private UsersWithGamesDataBase usersWithGamesDataBase = new UsersWithGamesDataBase();
-    @Autowired
-    private UserDetailsService jwtInMemoryUserDetailsService;
+    private final JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
 
     @GetMapping(path = "/api/usersWithGame/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -32,17 +31,16 @@ public class UserWithGamesController {
         //получаем юзера по айдишке
         User user = UserDataBase.getUser(id);
 
-        JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
+        //падает на этом моменте, потому что сервлет пустой прилетает почему то
+        String jwt = response.getHeader("Authorization").replace("Bearer ", "");
 
-        UserDetails userDetails = jwtInMemoryUserDetailsService.loadUserByUsername(user.getLogin());
+        //Из токена авторизации достаем логин
+        String getUserLoginFromToken = jwtTokenUtil.getUsernameFromToken(jwt);
 
-        //генерируем токен для этого юзера
-        String actualToken = jwtTokenUtil.generateToken(userDetails);
-
-        //если актуальный токен не сходится с тем, что принадлежит юзеру, то не показываем данные
-        if(!response.getHeader("Authorization").equals(actualToken)){
+        //если токен не принадлежит юзеру
+        if(!getUserLoginFromToken.equals(user.getLogin())){
             return "token is incorrect";
         }
-       return usersWithGamesDataBase.users.get(id).toString();
+       return UsersWithGamesDataBase.users.get(id).toString();
     }
 }

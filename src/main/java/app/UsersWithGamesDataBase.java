@@ -10,9 +10,9 @@ import java.util.List;
 
 public class UsersWithGamesDataBase {
 
-    public List<UserWithGames> users = new ArrayList<>();
+    public static List<UserWithGames> users = new ArrayList<>();
 
-    public UsersWithGamesDataBase() {
+    static {
         users.add(new UserWithGames(1, Collections.singletonList(Utils.generateRandomGame(true, 1))));
         users.add(new UserWithGames(2, Collections.singletonList(Utils.generateRandomGame(false, 2))));
         users.add(new UserWithGames(3, Collections.singletonList(Utils.generateRandomGame(true, 3))));

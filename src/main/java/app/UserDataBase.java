@@ -11,7 +11,7 @@ public class UserDataBase {
     public static List<User> baseUsers = new ArrayList<>();
     public static List<User> users = new ArrayList<>();
 
-    public UserDataBase() {
+    static  {
         baseUsers.add(new User("admin", "admin", 1));
         baseUsers.add(new User("demo", "password", 2));
         baseUsers.add(new User("threadqa", "iloveqa", 3));

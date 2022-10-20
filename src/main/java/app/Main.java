@@ -1,45 +1,34 @@
 package app;
 
-import helpers.Utils;
+import jwt.config.JwtTokenUtil;
 import models.User;
-import models.game.Game;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class Main {
+
     public static void main(String[] args) {
-        String hoverBefore = "#dff9f4";
-        String hoverAfter = "#e8be2b";
+        String tokenAdmin = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2NjI4MjAyMSwiaWF0IjoxNjY2MjY0MDIxfQ.yFvyhIZmI-M0p6CxIf_LFeLuHB3hafEBOzlF8cB5QI4xC3slFBNoN-eCb_fnmmXecAnpCuOU3kFvdYPqwEwumQ";
+        //получаем юзера по айдишке
+        User user = UserDataBase.getUser(1);
 
-        String textColoBefore = "#35D7BB";
-        String textColoAfter = "#11362f";
+        JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
+        String decoded = jwtTokenUtil.getUsernameFromToken(tokenAdmin);
 
-        String backBefore = "<p class=\"has-line-data\" data-line-start=\"\\d+\" data-line-end=\"\\d+\"><a href=\".+\">к оглавлению</a></p>";
-        String backAfter = "<p class=\"has-line-data\" data-line-start=\"27\" data-line-end=\"28\"><a href=\"./index.html\"><b>к оглавлению</b></a></p>";
+        System.out.println(tokenAdmin);
+        System.out.println(decoded);
 
-        List<File> f = new ArrayList<>();
-        listf("/Users/o.pendrak/Desktop/theory", f);
-        List<File> htmls = f.stream().filter(x->!x.getName().equals(".DS_STORE")).collect(Collectors.toList());
-
-  
-        int a = 9;
+        //если актуальный токен не сходится с тем, что принадлежит юзеру, то не показываем данные
+        if(!decoded.equals(user.getLogin())){
+            System.out.println("token is incorrect");
+        } else {
+            System.out.println(UsersWithGamesDataBase.users.get(1).toString());
+        }
     }
 
-    public static void listf(String directoryName, List<File> files) {
-        File directory = new File(directoryName);
 
-        // Get all files from a directory.
-        File[] fList = directory.listFiles();
-        if(fList != null)
-            for (File file : fList) {
-                if (file.isFile()) {
-                    files.add(file);
-                } else if (file.isDirectory()) {
-                    listf(file.getAbsolutePath(), files);
-                }
-            }
-    }
 }

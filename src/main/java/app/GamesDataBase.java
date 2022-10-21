@@ -11,7 +11,7 @@ public class GamesDataBase {
     public static List<Game> baseGames = new ArrayList<>();
     public static List<Game> games = new ArrayList<>();
 
-    public GamesDataBase() {
+    static {
         baseGames.add(Utils.generateRandomGame(true,1));
         baseGames.add(Utils.generateRandomGame(false,2));
         baseGames.add(Utils.generateRandomGame(true,3));

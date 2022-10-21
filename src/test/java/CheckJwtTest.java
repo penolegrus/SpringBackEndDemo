@@ -28,6 +28,6 @@ public class CheckJwtTest extends BaseApiTest {
     @Test
     public void jwt(){
         auth("admin", "admin");
-        given().auth().oauth2(token).get("/api/usersWithGame/1").then().log().all();
+        given().auth().oauth2(token).get("/api/usersWithGame/2").then().log().all();
     }
 }

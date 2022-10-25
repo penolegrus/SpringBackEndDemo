@@ -1,6 +1,9 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

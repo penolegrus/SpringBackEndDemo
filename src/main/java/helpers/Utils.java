@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 public class Utils {
     private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static final SecureRandom rnd = new SecureRandom();
-    private static final Random random = new Random();
+    public static final Random random = new Random();
 
     public static String randomString(int len) {
         StringBuilder sb = new StringBuilder(len);
@@ -71,6 +71,10 @@ public class Utils {
         return game;
     }
 
+    public static Game generateRandomGame(){
+        return generateRandomGame(rnd.nextBoolean());
+    }
+
     public static Game generateRandomGame(boolean withDlc) {
         Faker faker = new Faker();
         Random random = new Random();
@@ -85,10 +89,10 @@ public class Utils {
         game.setRating(random.nextInt(10));
         boolean isFree = random.nextBoolean();
         if (isFree) {
-            game.setFree(true);
+            game.setIsFree(true);
             game.setPrice(0.0);
         } else {
-            game.setFree(false);
+            game.setIsFree(false);
             game.setPrice(getRandomPrice());
         }
 

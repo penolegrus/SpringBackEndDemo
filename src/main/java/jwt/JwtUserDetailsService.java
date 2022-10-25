@@ -1,7 +1,7 @@
 package jwt;
 
 import app.UserDataBase;
-import org.springframework.security.core.userdetails.User;
+import models.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,16 +12,16 @@ import java.util.ArrayList;
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		models.User user;
-		if(UserDataBase.isLoginExists(username)){
-			user = UserDataBase.getUser(username);
-			return new User(username, user.getPass(), new ArrayList<>());
-		}
-		else {
-			throw new UsernameNotFoundException("User not found with username: " + username);
-		}
-	}
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        models.User user;
+        if(UserDataBase.isLoginExists(username)){
+            user = UserDataBase.getUser(username);
+            return new org.springframework.security.core.userdetails.User(username, user.getPass(), new ArrayList<>());
+        }
+        else {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+    }
 
 }

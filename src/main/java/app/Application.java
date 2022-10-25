@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"controllers","app", "jwt"} )
+@ComponentScan(basePackages = {"controllers","app", "jwt", "repository", "service"} )
 
 public class Application {
 

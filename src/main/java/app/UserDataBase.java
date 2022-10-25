@@ -1,8 +1,10 @@
 package app;
 
+import helpers.Utils;
 import models.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -11,10 +13,10 @@ public class UserDataBase {
     public static List<User> baseUsers = new ArrayList<>();
     public static List<User> users = new ArrayList<>();
 
-    static  {
-        baseUsers.add(new User("admin", "admin", 1));
-        baseUsers.add(new User("demo", "password", 2));
-        baseUsers.add(new User("threadqa", "iloveqa", 3));
+    static {
+        baseUsers.add(new User("admin", "admin", 1, Collections.singletonList(Utils.generateRandomGame(true, 1))));
+        baseUsers.add(new User("demo", "password", 2, Collections.singletonList(Utils.generateRandomGame(false, 2))));
+        baseUsers.add(new User("threadqa", "iloveqa", 3, Collections.singletonList(Utils.generateRandomGame(true, 3))));
         users.addAll(baseUsers);
     }
 
@@ -26,11 +28,11 @@ public class UserDataBase {
         return baseUsers.stream().anyMatch(x -> x.getId().equals(id));
     }
 
-    public boolean isUserInBaseUsers(User user) {
+    public static boolean isUserInBaseUsers(User user) {
         return baseUsers.contains(user);
     }
 
-    public void updateUser(User oldDataUser, String password) {
+    public static void updateUser(User oldDataUser, String password) {
         User user = getUser(oldDataUser.getId());
         user.setPass(password);
     }
@@ -55,21 +57,21 @@ public class UserDataBase {
         return true;
     }
 
-    public List<User> getAllUsers() {
+    public static List<User> getAllUsers() {
         return users;
     }
 
-    public void updateDataBase(List<User> newUserList){
+    public void updateDataBase(List<User> newUserList) {
         users = newUserList;
     }
 
-    public void removeLastUsers(int count) {
+    public static void removeLastUsers(int count) {
         for (int i = 0; i < count; i++) {
             users.remove(users.size() - 1);
         }
     }
 
-    public User createUser(User user) {
+    public static User createUser(User user) {
         users.add(user);
         return user;
     }

@@ -54,8 +54,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        String[] nonAuthEndpoints = {"/api/authenticate",
+        String[] nonAuthEndpoints = {"/api/login", "/api/register", "/api/users",
                 "/api/games", "/api/games/**",
+                "/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui/**",
+                "/webjars/**",
                 CAR_BRAND_API_URL, NUMS_API_URL};
 
         // Отключаем csrf

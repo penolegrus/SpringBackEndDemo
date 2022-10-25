@@ -76,7 +76,7 @@ public class GamesDataBase {
     }
 
     public boolean isPricesAndIsFreeCorrect(Game game) {
-        if (game.getFree()) {
+        if (game.getIsFree()) {
             if (!game.getPrice().equals(0.0)) {
                 return false;
             }
@@ -84,7 +84,7 @@ public class GamesDataBase {
 
         List<DLC> dlcs = game.getDlcs();
         for (DLC dlc : dlcs) {
-            if (dlc.getDlcFree()) {
+            if (dlc.getIsDlcFree()) {
                 if (!dlc.getPrice().equals(0.0)) {
                     return false;
                 }

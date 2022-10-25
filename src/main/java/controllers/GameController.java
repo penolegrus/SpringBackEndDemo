@@ -1,14 +1,15 @@
 package controllers;
 
 import app.GamesDataBase;
-import helpers.InfoResponse;
 import helpers.Utils;
+import models.InfoMessage;
 import models.Message;
 import models.game.DLC;
 import models.game.Game;
 import models.game.UpdField;
 import org.json.JSONObject;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,13 +26,13 @@ public class GameController {
 
     @GetMapping(path = GAME_API_URL + "/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getGame(@PathVariable Integer gameId, HttpServletResponse httpServletResponse) {
+    public ResponseEntity<?> getGame(@PathVariable Integer gameId, HttpServletResponse httpServletResponse) {
         Game game = gameDataBase.findGameById(gameId);
         if (game == null) {
             httpServletResponse.setStatus(400);
-            return new InfoResponse("fail", "Game not found").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Game not found"));
         }
-        return game.toString();
+        return ResponseEntity.status(200).body(game);
     }
 
     @GetMapping(path = GAME_API_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -51,110 +52,98 @@ public class GameController {
 
     @DeleteMapping(path = GAME_API_URL + "/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String deleteGame(@PathVariable Integer gameId, HttpServletResponse servlet) {
+    public ResponseEntity<?> deleteGame(@PathVariable Integer gameId) {
         if (!gameDataBase.isGameExist(gameId)) {
-            servlet.setStatus(400);
-            return new InfoResponse("fail", "Game not found to delete").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Game not found to delete"));
         }
         if (gameDataBase.isGameInBaseGames(gameId)) {
-            servlet.setStatus(400);
-            return new InfoResponse("fail", "Cant delete base games").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Cant delete base games"));
         }
 
         gameDataBase.deleteGame(gameId);
-        return new InfoResponse("success", "Game successfully deleted").toString();
+        return ResponseEntity.status(200).body(new InfoMessage("success", "Game successfully deleted"));
     }
 
     @DeleteMapping(path = GAME_API_URL + "/{gameId}/dlc", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String deleteDlc(@PathVariable Integer gameId, @RequestBody(required=false) List<DLC> dls, HttpServletResponse servlet) {
+    public ResponseEntity<?> deleteDlc(@PathVariable Integer gameId, @RequestBody(required=false) List<DLC> dls) {
         if (!gameDataBase.isGameExist(gameId)) {
-            servlet.setStatus(400);
-            return new InfoResponse("fail", "Game not found to delete dlc").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Game not found to delete dlc"));
         }
 
         if (gameDataBase.isGameInBaseGames(gameId)) {
-            servlet.setStatus(400);
-            return new InfoResponse("fail", "Cant delete dlc from base games").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Cant delete dlc from base games"));
         }
 
         if(dls == null || dls.isEmpty()){
-            servlet.setStatus(400);
-            return new InfoResponse("fail", "List with DLC to delete cant be empty or null").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "List with DLC to delete cant be empty or null"));
         }
 
         gameDataBase.deleteDlc(gameId, dls);
-        return new InfoResponse("success", "Game DLC successfully deleted").toString();
+        return ResponseEntity.status(200).body(new InfoMessage("success", "Game DLC successfully deleted"));
     }
 
     @PostMapping(path = {GAME_API_URL}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String addGame(@RequestBody Game game, HttpServletResponse responseServlet) {
+    public ResponseEntity<?> addGame(@RequestBody Game game) {
         JSONObject response = new JSONObject();
 
         if(!gameDataBase.isPricesAndIsFreeCorrect(game)){
-            responseServlet.setStatus(400);
-            return new InfoResponse("fail", "Free DLC or Game cant have price more than 0.0$").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Free DLC or Game cant have price more than 0.0$"));
         }
 
         game.setGameId(Utils.getRandomInt());
         response.put("info", new JSONObject((new Message("success", "Game created"))));
         response.put("register_data", new JSONObject(game));
-        responseServlet.setStatus(201);
+
 
         gameDataBase.addGame(game);
 
-        return response.toString();
+        return ResponseEntity.status(201).body(response);
     }
 
     @PutMapping(path = GAME_API_URL + "/{gameId}/updateField", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String updateGameField(@PathVariable Integer gameId, @RequestBody UpdField updField, HttpServletResponse responseServlet) {
+    public ResponseEntity<?> updateGameField(@PathVariable Integer gameId, @RequestBody UpdField updField) {
         Game oldGame = gameDataBase.findGameById(gameId);
         if(updField.getFieldName().equalsIgnoreCase("gameId")) {
-            responseServlet.setStatus(400);
-            return new InfoResponse("fail", "Cannot edit ID field").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Cannot edit ID field"));
         }
 
         if(!oldGame.isFieldExist(updField.getFieldName())){
-            responseServlet.setStatus(400);
-            return new InfoResponse("fail", "Cannot find field").toString();
+
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Cannot find field"));
         }
 
         if(!oldGame.isTypeOfNewFieldCorrect(updField)){
-            responseServlet.setStatus(400);
-            return new InfoResponse("fail", "Cannot set new value because field has incorrect type").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Cannot set new value because field has incorrect type"));
         }
 
         if(oldGame.isNewFieldHasSameValue(updField.getFieldName(),updField.getValue())){
-            responseServlet.setStatus(400);
-            return new InfoResponse("fail", "New field value is same as before").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "New field value is same as before"));
         }
 
         Game updated = oldGame.editFieldValue(updField.getFieldName(),updField.getValue());
 
         gameDataBase.updateGame(updated);
-        return new InfoResponse("success", "New value edited successfully on field " + updField.getFieldName()).toString();
+        return ResponseEntity.status(200).body(new InfoMessage("success", "New value edited successfully on field " + updField.getFieldName()));
     }
 
     @PutMapping(path = GAME_API_URL + "/{gameId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String updateGameDlcInfo(@PathVariable Integer gameId, @RequestBody(required = false) List<DLC> dlcs, HttpServletResponse responseServlet) {
+    public ResponseEntity<?> updateGameDlcInfo(@PathVariable Integer gameId, @RequestBody(required = false) List<DLC> dlcs) {
         Game oldGame = gameDataBase.findGameById(gameId);
 
         if (oldGame == null) {
-            responseServlet.setStatus(400);
-            return new InfoResponse("fail", "Game not found to modify").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Game not found to modify"));
         }
 
         if (gameDataBase.isGameInBaseGames(gameId)) {
-            responseServlet.setStatus(400);
-            return new InfoResponse("fail", "Cant modify base games").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Cant modify base games"));
         }
 
         if(dlcs == null || dlcs.isEmpty()){
-            responseServlet.setStatus(400);
-            return new InfoResponse("fail", "Empty body with list of dlc to modify").toString();
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Empty body with list of dlc to modify"));
         }
 
         List<DLC> dlsUpdated = oldGame.getDlcs();
@@ -163,6 +152,6 @@ public class GameController {
         oldGame.setDlcs(new ArrayList<>(new HashSet<>(dlsUpdated)));
 
         gameDataBase.updateGame(oldGame);
-        return new InfoResponse("success", "DlC successfully changed").toString();
+        return ResponseEntity.status(200).body(new InfoMessage("success", "DlC successfully changed"));
     }
 }

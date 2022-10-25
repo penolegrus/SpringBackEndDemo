@@ -140,7 +140,7 @@ public class GamesApiTest extends BaseApiTest {
     @Test
     public void addFreeGameWithPriceError() {
         Game game = Utils.generateRandomGame(true);
-        game.setFree(true);
+        game.setIsFree(true);
         game.setPrice(20.0);
         rest.post(game).hasStatusCode(400).hasMessage("Free DLC or Game cant have price more than 0.0$");
     }
@@ -148,9 +148,9 @@ public class GamesApiTest extends BaseApiTest {
     @Test
     public void addFreeGameWithDlcPriceError() {
         Game game = Utils.generateRandomGame(true);
-        game.setFree(true);
+        game.setIsFree(true);
         game.setPrice(0.0);
-        game.getDlcs().get(0).setDlcFree(true);
+        game.getDlcs().get(0).setIsDlcFree(true);
         game.getDlcs().get(0).setPrice(20.0);
         rest.post(game).hasStatusCode(400).hasMessage("Free DLC or Game cant have price more than 0.0$");
     }

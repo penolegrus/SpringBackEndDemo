@@ -13,6 +13,10 @@ public class UserGameService {
         this.user = user;
     }
 
+    public boolean isLimitForGames(){
+        return user.getGames().size() <= 20;
+    }
+
     public Game findGameById(Integer id) {
         return user.getGames().stream().filter(x -> x.getGameId().equals(id)).findFirst().orElse(null);
     }

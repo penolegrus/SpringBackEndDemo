@@ -4,7 +4,6 @@ import app.UserDataBase;
 import helpers.Utils;
 import jwt.config.JwtTokenUtil;
 import models.*;
-import models.game.Game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,7 +14,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static app.UserDataBase.*;
-import static helpers.Constants.USERS_API_URL;
 
 @RestController
 public class UserController {
@@ -107,27 +105,5 @@ public class UserController {
 
         createUser(user);
         return ResponseEntity.status(201).body(response);
-    }
-
-
-    @PostMapping(path = USERS_API_URL + "/addUsers/{count}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<?> addUsersToDataBase(@PathVariable Integer count) {
-        if (count > 250) {
-            return ResponseEntity.status(400).body(new InfoMessage("fail", "You can add less than 250 random users"));
-        }
-
-        for (int i = 0; i < count; i++) {
-
-            List<Game> games = new ArrayList<>();
-            for (int k = 0; k <= Utils.random.nextInt(3); k++) {
-                games.add(Utils.generateRandomGame());
-            }
-
-            createUser(new User("testLogin" + i, "testPassword" + i, Utils.getRandomInt(), games));
-        }
-        return ResponseEntity.status(200)
-                .body(new InfoMessage("success",
-                        count + " users added to database. Users count - " + getAllUsers().size()));
     }
 }

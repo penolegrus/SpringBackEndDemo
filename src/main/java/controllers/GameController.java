@@ -105,6 +105,10 @@ public class GameController {
 
         UserGameService userGameService = new UserGameService(user);
 
+        if(!userGameService.isLimitForGames()){
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Limit of games, user can have only 20 games"));
+        }
+
         Map<String, Object> response = new HashMap<>();
 
         if (!userGameService.isPricesAndIsFreeCorrect(newGame)) {

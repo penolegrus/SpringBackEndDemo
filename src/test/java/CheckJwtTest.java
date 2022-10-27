@@ -8,38 +8,24 @@ import org.junit.jupiter.api.Test;
 import restapi.BaseApiTest;
 
 
-
 import static helpers.Constants.REGISTER_API_URL;
 import static io.restassured.RestAssured.given;
 import static restapi.utils.TestUsers.DEMO_USER;
 
 public class CheckJwtTest extends BaseApiTest {
 
-    private String token;
-
-    public void auth(User user){
-        JwtRequest jwtRequest = new JwtRequest(user.getLogin(), user.getPass());
-
-        String jwtResponse = given()
-                .contentType(ContentType.JSON)
-                .body(jwtRequest)
-                .post("/api/login")
-                .then().log().all().extract().body().jsonPath().get("token");
-
-        Assertions.assertNotNull(jwtResponse);
-        token = jwtResponse;
-    }
 
     @Test
-    public void jwt(){
+    public void jwt() {
         auth(DEMO_USER);
+        // given().get("/api/user").then().log().all();
         given().auth().oauth2(token).get("/api/user").then().log().all();
-        given().auth().oauth2(token).get("/api/user/games").then().log().all();
-        given().auth().oauth2(token).get("/api/user/games/1").then().log().all();
+        // given().auth().oauth2(token).get("/api/user/games").then().log().all();
+        //given().auth().oauth2(token).get("/api/user/games/1").then().log().all();
     }
 
     @Test
-    public void addUsernew(){
+    public void addUsernew() {
         User user = new User("admin3", "admin");
         given().body(user).post("/api/register").then().log().all();
     }
@@ -52,7 +38,7 @@ public class CheckJwtTest extends BaseApiTest {
 
         auth(created);
 
-        restService.put(token,  "/api/user", new ChangeUserPass("newPassEdited"))
+        restService.put(token, "/api/user", new ChangeUserPass("newPassEdited"))
                 .hasMessage("User password successfully changed");
 
         User editedUser = getUser();
@@ -71,7 +57,7 @@ public class CheckJwtTest extends BaseApiTest {
 
         auth(created);
 
-        restService.put(token,  "/api/user", new ChangeUserPass())
+        restService.put(token,"/api/user", new ChangeUserPass())
                 .hasMessage("Body has no password parameter");
 
         deleteUser();
@@ -79,9 +65,9 @@ public class CheckJwtTest extends BaseApiTest {
 
     @Test
     public void updateUserPassBaseUser() {
-        auth(new User("admin","admin"));
+        auth(new User("admin", "admin"));
         ChangeUserPass newPass = new ChangeUserPass("newPassword");
-        restService.put(token,"/api/user", newPass).hasMessage("Cant update base users");
+        restService.put(token, "/api/user", newPass).hasMessage("Cant update base users");
     }
 
     private void deleteUser() {
@@ -89,7 +75,7 @@ public class CheckJwtTest extends BaseApiTest {
     }
 
     private User getUser() {
-        return restService.get(token,"/api/user").as(User.class);
+        return restService.get(token, "/api/user").as(User.class);
     }
 
 

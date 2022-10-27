@@ -39,6 +39,16 @@ public class RestService {
         return this;
     }
 
+    public RestService put(String jwt, String endPoint) {
+        asResponse(given().auth().oauth2(jwt).put(endPoint));
+        return this;
+    }
+
+    public RestService post(String jwt, String endPoint, Object body) {
+        asResponse(given().auth().oauth2(jwt).body(body).post(endPoint));
+        return this;
+    }
+
     public RestService post(String endPoint, Object body) {
         asResponse(given().body(body).post(endPoint));
         return this;
@@ -61,6 +71,11 @@ public class RestService {
 
     public RestService delete(String endPoint, Object body) {
         asResponse(given().body(body).delete(endPoint));
+        return this;
+    }
+
+    public RestService delete(String jwt, String endPoint, Object body) {
+        asResponse(given().auth().oauth2(jwt).body(body).delete(endPoint));
         return this;
     }
 

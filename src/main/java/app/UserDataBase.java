@@ -2,6 +2,7 @@ package app;
 
 import helpers.Utils;
 import models.User;
+import models.game.Game;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,17 +21,19 @@ public class UserDataBase {
         users.addAll(baseUsers);
     }
 
+
     public static boolean isLoginExists(String login) {
         return users.stream().anyMatch(x -> x.getLogin().equalsIgnoreCase(login));
     }
 
-    public boolean isUserInBaseUsers(Integer id) {
+    public static boolean isUserInBaseUsers(Integer id) {
         return baseUsers.stream().anyMatch(x -> x.getId().equals(id));
     }
 
     public static boolean isUserInBaseUsers(User user) {
         return baseUsers.contains(user);
     }
+
 
     public static void updateUser(User oldDataUser, String password) {
         User user = getUser(oldDataUser.getId());
@@ -51,7 +54,7 @@ public class UserDataBase {
         return users.stream().anyMatch(x -> x.getId().equals(id));
     }
 
-    public boolean deleteUser(Integer id) {
+    public static boolean deleteUser(Integer id) {
         User user = users.stream().filter(x -> x.getId().equals(id)).findFirst().get();
         users.remove(user);
         return true;

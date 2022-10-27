@@ -17,7 +17,7 @@ public class CarsApiTest extends BaseApiTest {
 
     @BeforeAll
     public static void getCats(){
-        carBrands = rest.get(CAR_BRAND_API_URL).asList(CarBrands.class);
+        carBrands = restService.get(CAR_BRAND_API_URL).asList(CarBrands.class);
     }
 
     @Test

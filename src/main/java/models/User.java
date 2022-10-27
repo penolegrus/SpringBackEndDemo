@@ -26,11 +26,4 @@ public class User {
     public User(String login) {
         this.login = login;
     }
-
-
-    @Override
-    public String toString() {
-        return new JSONObject(this).toString();
-    }
-
 }

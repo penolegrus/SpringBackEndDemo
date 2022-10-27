@@ -25,12 +25,12 @@ public class GamesApiTest extends BaseApiTest {
     }
 
     private List<Game> getAllGames() {
-        return rest.get().asList(Game.class);
+        return restService.get().asList(Game.class);
     }
 
     @Test
     public void testGetGameByIdSuccess() {
-        Game game = rest.get("/1")
+        Game game = restService.get("/1")
                 .hasStatusCode(200)
                 .as(Game.class);
         Assertions.assertNotNull(game);
@@ -38,14 +38,14 @@ public class GamesApiTest extends BaseApiTest {
 
     @Test
     public void testGetGameByIdNotFound() {
-        rest.get("/5")
+        restService.get("/5")
                 .hasStatusCode(400)
                 .hasMessage("Game not found");
     }
 
     @Test
     public void deleteBaseGame() {
-        rest.delete("/1")
+        restService.delete("/1")
                 .hasStatusCode(400)
                 .hasMessage("Cant delete base games");
     }
@@ -59,7 +59,7 @@ public class GamesApiTest extends BaseApiTest {
 
         Assertions.assertNotEquals(gamesBefore.size(), gamesAfterNewGame.size(), "Game not added");
 
-        rest.delete("/" + game.getGameId())
+        restService.delete("/" + game.getGameId())
                 .hasStatusCode(200)
                 .hasMessage("Game successfully deleted");
 
@@ -70,12 +70,12 @@ public class GamesApiTest extends BaseApiTest {
 
     @Test
     public void deleteDlcGameNotFound() {
-        rest.delete("/-1").hasStatusCode(400).hasMessage("Game not found to delete");
+        restService.delete("/-1").hasStatusCode(400).hasMessage("Game not found to delete");
     }
 
     @Test
     public void deleteDlcBaseGame() {
-        rest.delete("/1").hasStatusCode(400).hasMessage("Cant delete base games");
+        restService.delete("/1").hasStatusCode(400).hasMessage("Cant delete base games");
     }
 
     @Test
@@ -84,10 +84,10 @@ public class GamesApiTest extends BaseApiTest {
         String dlcEndPoint = String.format("/%d/dlc", game.getGameId());
         List<DLC> toDeleteDlc = new ArrayList<>();
 
-        rest.delete(dlcEndPoint).hasStatusCode(400)
+        restService.delete(dlcEndPoint).hasStatusCode(400)
                 .hasMessage("List with DLC to delete cant be empty or null");
 
-        rest.delete(dlcEndPoint, toDeleteDlc).hasStatusCode(400)
+        restService.delete(dlcEndPoint, toDeleteDlc).hasStatusCode(400)
                 .hasMessage("List with DLC to delete cant be empty or null");
     }
 
@@ -97,7 +97,7 @@ public class GamesApiTest extends BaseApiTest {
         String dlcEndPoint = String.format("/%d/dlc", game.getGameId());
         List<DLC> toDeleteDlc = Collections.singletonList(game.getDlcs().get(0));
 
-        rest.delete(dlcEndPoint, toDeleteDlc).hasStatusCode(200).hasMessage("Game DLC successfully deleted");
+        restService.delete(dlcEndPoint, toDeleteDlc).hasStatusCode(200).hasMessage("Game DLC successfully deleted");
 
         Game deletedDlc = getGame(game.getGameId());
 
@@ -106,18 +106,18 @@ public class GamesApiTest extends BaseApiTest {
 
     @Test
     public void updateDlcInfoErrorGameNotFound() {
-        rest.put("-1").hasStatusCode(400).hasMessage("Game not found to modify");
+        restService.put("-1").hasStatusCode(400).hasMessage("Game not found to modify");
     }
 
     @Test
     public void updateDlcInfoBaseGame() {
-        rest.put("1").hasStatusCode(400).hasMessage("Cant modify base games");
+        restService.put("1").hasStatusCode(400).hasMessage("Cant modify base games");
     }
 
     @Test
     public void updateDlcInfoWithoutDlc() {
         Game game = addGame(true);
-        rest.put(String.valueOf(game.getGameId()))
+        restService.put(String.valueOf(game.getGameId()))
                 .hasStatusCode(400)
                 .hasMessage("Empty body with list of dlc to modify");
     }
@@ -129,7 +129,7 @@ public class GamesApiTest extends BaseApiTest {
         firstDlcToUpdate.setDlcName("new value dlc");
         List<DLC> dlcList = Collections.singletonList(firstDlcToUpdate);
 
-        rest.put(String.valueOf(game.getGameId()), dlcList).hasStatusCode(200)
+        restService.put(String.valueOf(game.getGameId()), dlcList).hasStatusCode(200)
                 .hasMessage("DlC successfully changed");
 
         Game gameUpdated = getGame(game.getGameId());
@@ -142,7 +142,7 @@ public class GamesApiTest extends BaseApiTest {
         Game game = Utils.generateRandomGame(true);
         game.setIsFree(true);
         game.setPrice(20.0);
-        rest.post(game).hasStatusCode(400).hasMessage("Free DLC or Game cant have price more than 0.0$");
+        restService.post(game).hasStatusCode(400).hasMessage("Free DLC or Game cant have price more than 0.0$");
     }
 
     @Test
@@ -152,13 +152,13 @@ public class GamesApiTest extends BaseApiTest {
         game.setPrice(0.0);
         game.getDlcs().get(0).setIsDlcFree(true);
         game.getDlcs().get(0).setPrice(20.0);
-        rest.post(game).hasStatusCode(400).hasMessage("Free DLC or Game cant have price more than 0.0$");
+        restService.post(game).hasStatusCode(400).hasMessage("Free DLC or Game cant have price more than 0.0$");
     }
 
     @Test
     public void addGameSuccess() {
         Game game = Utils.generateRandomGame(true);
-        rest.post(game).hasStatusCode(201).hasMessage("Game created");
+        restService.post(game).hasStatusCode(201).hasMessage("Game created");
     }
 
     @Test
@@ -167,7 +167,7 @@ public class GamesApiTest extends BaseApiTest {
         String endpoint = String.format("/%s/updateField", game.getGameId());
         UpdField updField = new UpdField("gameId", 10);
 
-        rest.put(endpoint, updField).hasStatusCode(400).hasMessage("Cannot edit ID field");
+        restService.put(endpoint, updField).hasStatusCode(400).hasMessage("Cannot edit ID field");
     }
 
     @Test
@@ -176,7 +176,7 @@ public class GamesApiTest extends BaseApiTest {
         String endpoint = String.format("/%s/updateField", game.getGameId());
         UpdField updField = new UpdField("fakeField", 10);
 
-        rest.put(endpoint, updField).hasStatusCode(400).hasMessage("Cannot find field");
+        restService.put(endpoint, updField).hasStatusCode(400).hasMessage("Cannot find field");
     }
 
     @Test
@@ -185,7 +185,7 @@ public class GamesApiTest extends BaseApiTest {
         String endpoint = String.format("/%s/updateField", game.getGameId());
         UpdField updField = new UpdField("title", 10);
 
-        rest.put(endpoint, updField).hasStatusCode(400).hasMessage("Cannot set new value because field has incorrect type");
+        restService.put(endpoint, updField).hasStatusCode(400).hasMessage("Cannot set new value because field has incorrect type");
     }
 
     @Test
@@ -193,7 +193,7 @@ public class GamesApiTest extends BaseApiTest {
         Game game = addGame(true);
         String endpoint = String.format("/%s/updateField", game.getGameId());
         UpdField updField = new UpdField("title", game.getTitle());
-        rest.put(endpoint, updField).hasStatusCode(400).hasMessage("New field value is same as before");
+        restService.put(endpoint, updField).hasStatusCode(400).hasMessage("New field value is same as before");
     }
 
     @Test
@@ -201,15 +201,15 @@ public class GamesApiTest extends BaseApiTest {
         Game game = addGame(true);
         String endpoint = String.format("/%s/updateField", game.getGameId());
         UpdField updField = new UpdField("title", "new title");
-        rest.put(endpoint, updField).hasStatusCode(200).hasMessage("New value edited successfully on field title");
+        restService.put(endpoint, updField).hasStatusCode(200).hasMessage("New value edited successfully on field title");
     }
 
     private Game addGame(boolean withDlc) {
         Game game = withDlc ? Utils.generateRandomGame(true) : Utils.generateRandomGame(false);
-        return rest.post(game).as("register_data", Game.class);
+        return restService.post(game).as("register_data", Game.class);
     }
 
     private Game getGame(int gameId) {
-        return rest.get("/" + gameId).as(Game.class);
+        return restService.get("/" + gameId).as(Game.class);
     }
 }

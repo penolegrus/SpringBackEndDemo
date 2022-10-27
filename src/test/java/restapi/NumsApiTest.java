@@ -9,7 +9,7 @@ public class NumsApiTest extends BaseApiTest {
 
     @Test
     public void check(){
-        NumbersPow value = rest.get("/api/nums").as("numbersPow.nums", NumbersPow.class);
+        NumbersPow value = restService.get("/api/nums").as("numbersPow.nums", NumbersPow.class);
         System.out.println(value);
     }
 

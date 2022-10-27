@@ -8,63 +8,78 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class RestSender {
+public class RestService {
 
     private Response response;
 
-    public RestSender hasMessage(String messageValue) {
-        Message message = response.then().log().all().extract().body().jsonPath().getObject("info", Message.class);
+    public RestService hasMessage(String messageValue) {
+        Message message = response.then().extract().body().jsonPath().getObject("info", Message.class);
         Assertions.assertNotNull(message, "No message in response");
         Assertions.assertEquals(messageValue, message.getMessage());
         return this;
     }
 
-    public RestSender hasStatusCode(int statusCode) {
+    public RestService hasStatusCode(int statusCode) {
         Assertions.assertEquals(statusCode, response.getStatusCode());
         return this;
     }
 
-    public RestSender put(String endPoint, Object body) {
+    public RestService put(String endPoint, Object body) {
         asResponse(given().body(body).put(endPoint));
         return this;
     }
 
-    public RestSender put(String endPoint) {
+    public RestService put(String jwt, String endPoint, Object body) {
+        asResponse(given().auth().oauth2(jwt).body(body).put(endPoint));
+        return this;
+    }
+
+    public RestService put(String endPoint) {
         asResponse(given().put(endPoint));
         return this;
     }
 
-    public RestSender post(String endPoint, Object body) {
+    public RestService post(String endPoint, Object body) {
         asResponse(given().body(body).post(endPoint));
         return this;
     }
 
-    public RestSender post(Object body) {
+    public RestService post(Object body) {
         asResponse(given().body(body).post());
         return this;
     }
 
-    public RestSender delete(String endPoint) {
+    public RestService delete(String endPoint) {
         asResponse(given().delete(endPoint));
         return this;
     }
 
-    public RestSender delete(String endPoint, Object body) {
+    public RestService delete(String jwt, String endPoint) {
+        asResponse(given().auth().oauth2(jwt).delete(endPoint));
+        return this;
+    }
+
+    public RestService delete(String endPoint, Object body) {
         asResponse(given().body(body).delete(endPoint));
         return this;
     }
 
-    public RestSender get(String endPoint) {
+    public RestService get(String endPoint) {
         asResponse(given().get(endPoint));
         return this;
     }
 
-    public RestSender get() {
+    public RestService get(String jwt, String endPoint) {
+        asResponse(given().auth().oauth2(jwt).get(endPoint));
+        return this;
+    }
+
+    public RestService get() {
         asResponse(given().get());
         return this;
     }
 
-    private RestSender asResponse(Response responseForExtract) {
+    private RestService asResponse(Response responseForExtract) {
         response = responseForExtract.then().log().all().extract().response();
         return this;
     }

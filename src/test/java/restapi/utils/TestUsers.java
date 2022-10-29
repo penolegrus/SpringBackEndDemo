@@ -1,6 +1,6 @@
 package restapi.utils;
 
-import models.User;
+import models.user.User;
 
 public class TestUsers {
     public static User ADMIN_USER = new User("admin", "admin");

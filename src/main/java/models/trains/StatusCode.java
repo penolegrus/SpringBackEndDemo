@@ -1,4 +1,4 @@
-package models;
+package models.trains;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

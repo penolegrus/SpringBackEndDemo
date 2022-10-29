@@ -1,6 +1,6 @@
 package restapi;
 
-import models.CarBrands;
+import models.trains.CarBrands;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;

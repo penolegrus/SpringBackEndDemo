@@ -1,4 +1,4 @@
-package models;
+package models.trains;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import lombok.AllArgsConstructor;

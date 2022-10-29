@@ -1,6 +1,6 @@
 package controllers;
 
-import models.StatusCode;
+import models.trains.StatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

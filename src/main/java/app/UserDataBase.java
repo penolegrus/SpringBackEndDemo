@@ -1,8 +1,7 @@
 package app;
 
 import helpers.Utils;
-import models.User;
-import models.game.Game;
+import models.user.User;
 
 import java.util.ArrayList;
 import java.util.Collections;

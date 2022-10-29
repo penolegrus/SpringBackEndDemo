@@ -1,14 +1,10 @@
 package restapi;
 
 import helpers.Utils;
-import models.User;
-import org.junit.jupiter.api.BeforeAll;
+import models.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
-
-
-import static helpers.Constants.REGISTER_API_URL;
 
 public class UserRegisterTests extends BaseApiTest {
 
@@ -44,7 +40,7 @@ public class UserRegisterTests extends BaseApiTest {
         User data = restService.post(user)
                 .hasStatusCode(201)
                 .hasMessage("User created")
-                .as("register_data");
+                .as("register_data", User.class);
 
         Assert.assertEquals(user.getLogin(), data.getLogin());
         Assert.assertEquals(user.getPass(), data.getPass());

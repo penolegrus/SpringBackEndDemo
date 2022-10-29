@@ -2,8 +2,18 @@ package controllers;
 
 import app.UserDataBase;
 import helpers.Utils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jwt.config.JwtTokenUtil;
 import models.*;
+import models.user.ChangeUserPass;
+import models.user.RegisterUserResponse;
+import models.user.User;
+import models.user.UserLogins;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,11 +36,21 @@ public class UserController {
         return UserDataBase.getUser(getUserLoginFromToken);
     }
 
-
+    @Operation(summary = "Обновление пароля у пользователя")
     @PutMapping(path = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Пароль обновлен успешно",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = InfoMessage.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Пароль не обновлен",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = InfoMessage.class)))
+    })
     @ResponseBody
-    public ResponseEntity<?> updateUserPassword(@RequestBody ChangeUserPass passwordJson,
-                                                @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+    public ResponseEntity<InfoMessage> updateUserPassword(@Parameter(name = "Новый пароль пользователя") @RequestBody ChangeUserPass passwordJson,
+                                                @Parameter(name = "JWT токен") @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
 
         if (passwordJson.getPassword() == null || passwordJson.getPassword().isEmpty()) {
             return ResponseEntity.status(400).body(new InfoMessage("fail", "Body has no password parameter"));
@@ -47,25 +67,52 @@ public class UserController {
         return ResponseEntity.status(200).body(new InfoMessage("success", "User password successfully changed"));
     }
 
+    @Operation(summary = "Получение информации о пользователе")
     @GetMapping(path = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Информация о пользователе",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = User.class))),
+            })
     @ResponseBody
-    public ResponseEntity<?> getUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+    public ResponseEntity<User> getUser(@Parameter(description = "JWT токен")
+                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         User user = getUserFromJwt(authHeader);
         return ResponseEntity.status(200).body(user);
     }
 
+    @Operation(summary = "Показывает логины всех существующих пользователей")
     @GetMapping(path = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Список с логины всех существующих пользователей",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserLogins.class))),
+             })
     @ResponseBody
-    public ResponseEntity<?> getAllUserNames() {
+    public ResponseEntity<UserLogins> getAllUserNames() {
         List<String> names = UserDataBase.getAllUsers().stream().map(User::getLogin).collect(Collectors.toList());
         UserLogins usersOnlyNames = new UserLogins(names);
 
         return ResponseEntity.status(200).body(usersOnlyNames);
     }
 
+    @Operation(summary = "Удаляет пользователя из Базы данных")
     @DeleteMapping(path = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Пользователь успешно удален",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = InfoMessage.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Нельзя удалить начальных пользователей",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = InfoMessage.class)))
+    })
     @ResponseBody
-    public ResponseEntity<?> deleteUserFromDb(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+    public ResponseEntity<InfoMessage> deleteUserFromDb(@Parameter(description = "JWT токен")
+                                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         User user = getUserFromJwt(authHeader);
 
         if (isUserInBaseUsers(user.getId())) {
@@ -76,16 +123,26 @@ public class UserController {
         return ResponseEntity.status(200).body(new InfoMessage("success", "User successfully deleted"));
     }
 
-
+    @Operation(summary = "Регистрация нового пользователя")
     @PostMapping(path = "/api/register", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Пользователь зарегистрирован",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = RegisterUserResponse.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Ошибка регистрации, неверные поля",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = InfoMessage.class)))
+    })
     @ResponseBody
-    public ResponseEntity<?> registerPost(@RequestBody User user) {
+    public ResponseEntity<?> registerPost(@Parameter(description = "Json схема пользователя, можно без полей id и games регистрировать")
+                                              @RequestBody User user) {
 
         int limitToDelete = 200;
         if (getAllUsers().size() > limitToDelete) {
             removeLastUsers(100);
         }
-        Map<String, Object> response = new HashMap<>();
 
         if (user.getLogin() == null || user.getPass() == null) {
             return ResponseEntity.status(400).body(new InfoMessage("fail", "Missing login or password"));
@@ -100,10 +157,7 @@ public class UserController {
         }
 
         user.setId(Utils.getRandomInt());
-        response.put("info", new Message("success", "User created"));
-        response.put("register_data", user);
-
         createUser(user);
-        return ResponseEntity.status(201).body(response);
+        return ResponseEntity.status(201).body(new RegisterUserResponse(user, new Message("success", "User created")));
     }
 }

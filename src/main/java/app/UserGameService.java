@@ -1,6 +1,6 @@
 package app;
 
-import models.User;
+import models.user.User;
 import models.game.DLC;
 import models.game.Game;
 

@@ -1,13 +1,12 @@
 package restapi;
 
 import helpers.Utils;
-import models.User;
+import models.user.User;
 import models.game.DLC;
 import models.game.Game;
 import models.game.UpdField;
 import org.junit.jupiter.api.Assertions;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static helpers.Constants.GAME_API_URL;
 import static helpers.Constants.REGISTER_API_URL;
 import static restapi.utils.TestUsers.DEMO_USER;
 

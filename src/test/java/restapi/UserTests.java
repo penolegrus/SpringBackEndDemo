@@ -2,9 +2,9 @@ package restapi;
 
 import helpers.Utils;
 import io.restassured.path.json.JsonPath;
-import models.ChangeUserPass;
+import models.user.ChangeUserPass;
 import models.Message;
-import models.User;
+import models.user.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;

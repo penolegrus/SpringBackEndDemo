@@ -1,9 +1,17 @@
 package jwt;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jwt.config.JwtTokenUtil;
 import jwt.models.JwtRequest;
 import jwt.models.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,8 +34,21 @@ public class JwtAuthenticationController {
 	@Autowired
 	private JwtUserDetailsService jwtInMemoryUserDetailsService;
 
+
+	@Operation(description = "Получение JWT токена для пользователя")
+	@ApiResponses(value = {
+			@ApiResponse(
+					responseCode = "200",
+					description = "Jwt токен пользователя для дальнейших действий",
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponse.class))),
+			@ApiResponse(
+					responseCode = "401",
+					description = "Введен неверный логин или пароль",
+					content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+	})
 	@RequestMapping(value = "/api/login", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+	public ResponseEntity<?> createAuthenticationToken(@Parameter(description = "Логин и пароль пользователя")
+														   @RequestBody JwtRequest authenticationRequest) throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 

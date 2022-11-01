@@ -19,11 +19,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.testng:testng:7.5'
     implementation 'io.rest-assured:rest-assured:4.4.0'
+    testImplementation 'io.rest-assured:json-schema-validator:4.4.0'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
     implementation 'io.springfox:springfox-swagger-ui:3.0.0'
     implementation 'com.github.javafaker:javafaker:1.0.2'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    testImplementation 'io.qameta.allure:allure-rest-assured:2.12.1'
+    testImplementation 'io.qameta.allure:allure-java-commons:2.12.1'
+    testImplementation 'io.qameta.allure:allure-junit5:2.12.1'
 
 
     implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names'

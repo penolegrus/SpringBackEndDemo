@@ -67,7 +67,7 @@ public class GameController {
     })
     @GetMapping(path = "/api/user/games/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getGames(@Parameter(description = "id игры") @PathVariable Integer id,
+    public ResponseEntity<?> getGame(@Parameter(description = "id игры") @PathVariable Integer id,
                                       @Parameter(description = "Jwt токен")
                                       @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         User user = getUserFromJwt(authHeader);

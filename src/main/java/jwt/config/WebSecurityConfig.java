@@ -57,6 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         String[] nonAuthEndpoints = {"/api/login", "/api/register", "/api/users",
                 "/api/files/**",
                 "/api/easy/**",
+                "/api/bad-request", "/api/created", "/api/forbidden", "/api/invalid-url", "/api/moved", "/api/no-content",
                 "/v2/api-docs",
                 "/configuration/ui",
                 "/swagger-resources/**",

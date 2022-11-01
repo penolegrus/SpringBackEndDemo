@@ -20,6 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,7 +53,7 @@ public class UserController {
     })
     @ResponseBody
     public ResponseEntity<InfoMessage> updateUserPassword(@Parameter(name = "Новый пароль пользователя") @RequestBody ChangeUserPass passwordJson,
-                                                @Parameter(name = "JWT токен") @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+                                                          @Parameter(name = "JWT токен") @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
 
         if (passwordJson.getPassword() == null || passwordJson.getPassword().isEmpty()) {
             return ResponseEntity.status(400).body(new InfoMessage("fail", "Body has no password parameter"));
@@ -74,10 +77,10 @@ public class UserController {
                     responseCode = "200",
                     description = "Информация о пользователе",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = User.class))),
-            })
+    })
     @ResponseBody
     public ResponseEntity<User> getUser(@Parameter(description = "JWT токен")
-                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+                                        @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         User user = getUserFromJwt(authHeader);
         return ResponseEntity.status(200).body(user);
     }
@@ -89,7 +92,7 @@ public class UserController {
                     responseCode = "200",
                     description = "Список с логины всех существующих пользователей",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserLogins.class))),
-             })
+    })
     @ResponseBody
     public ResponseEntity<UserLogins> getAllUserNames() {
         List<String> names = UserDataBase.getAllUsers().stream().map(User::getLogin).collect(Collectors.toList());
@@ -112,7 +115,7 @@ public class UserController {
     })
     @ResponseBody
     public ResponseEntity<InfoMessage> deleteUserFromDb(@Parameter(description = "JWT токен")
-                                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+                                                        @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         User user = getUserFromJwt(authHeader);
 
         if (isUserInBaseUsers(user.getId())) {
@@ -137,8 +140,7 @@ public class UserController {
     })
     @ResponseBody
     public ResponseEntity<?> registerPost(@Parameter(description = "Json схема пользователя, можно без полей id и games регистрировать")
-                                              @RequestBody User user) {
-
+                                          @RequestBody User user) {
         int limitToDelete = 200;
         if (getAllUsers().size() > limitToDelete) {
             removeLastUsers(100);

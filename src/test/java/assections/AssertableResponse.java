@@ -1,6 +1,7 @@
 package assections;
 
 import io.qameta.allure.Step;
+import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,10 @@ public class AssertableResponse {
 
     public <T> List<T> asList(String jsonPath, Class<T> clazz) {
         return response.extract().body().jsonPath().getList(jsonPath,clazz);
+    }
+
+    public Response asResponse(){
+        return response.extract().response();
     }
 
     public byte[] asByteArray(){

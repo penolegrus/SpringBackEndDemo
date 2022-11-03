@@ -5,13 +5,14 @@ import helpers.Utils;
 import models.game.DLC;
 import models.game.Game;
 import models.game.UpdField;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 public class GameService extends WebService {
 
-    public GameService(String basePath) {
-        super(basePath);
+    public GameService() {
+        super("/user/");
     }
 
     public AssertableResponse getGames() {

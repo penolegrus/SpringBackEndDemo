@@ -3,7 +3,6 @@ package tests;
 import assections.Conditions;
 import core.TestBase;
 import extensions.listeners.AllureLoggingListener;
-import extensions.parameter_extension.RandomUser;
 import extensions.parameter_extension.RandomUserParameterExtension;
 import models.user.ChangeUserPass;
 import models.user.User;
@@ -19,10 +18,9 @@ import static testdata.TestData.ADMIN_USER;
 public class UserTests extends TestBase {
 
     @Test
-    public void testChangPassPositive(@RandomUser User user) {
-        userService.register(user);
-
-        userService.login(user);
+    public void testChangPassPositive() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         userService.updatePassword(new ChangeUserPass("newPassEdited"))
                 .shouldHave(Conditions.hasMessage("User password successfully changed"));
@@ -30,14 +28,14 @@ public class UserTests extends TestBase {
         User updatedUser = userService.getUserInfo().as(User.class);
 
         Assertions.assertNotNull(updatedUser.getPass());
-        Assertions.assertNotEquals(user.getPass(), updatedUser.getPass());
+        Assertions.assertNotEquals(randomTestUser.getPass(), updatedUser.getPass());
         userService.deleteAuthedUser();
     }
 
     @Test
-    public void updateUserPassNoValueNegative(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void updateUserPassNoValueNegative() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
         userService.updatePassword(new ChangeUserPass())
                 .shouldHave(Conditions.statusCode(400))
                 .shouldHave(Conditions.hasMessage("Body has no password parameter"));
@@ -53,37 +51,36 @@ public class UserTests extends TestBase {
     }
 
     @Test
-    public void registerSuccessTest(@RandomUser User user) {
-        userService.register(user)
+    public void registerSuccessTest() {
+        userService.register(randomTestUser)
                 .shouldHave(Conditions.statusCode(201))
                 .shouldHave(Conditions.hasSchema(new File("src/test/resources/jsonSchemas/successUserRegisterSchema.json")))
                 .shouldHave(Conditions.hasMessage("User created"));
-        userService.login(user);
+        userService.login(randomTestUser);
         userService.deleteAuthedUser();
     }
 
     @Test
     public void negativeRegisterNewUserWithAlreadyLoginExistTest() {
-        User user = new User("admin", "admin");
-        userService.register(user)
+        userService.register(ADMIN_USER)
                 .shouldHave(Conditions.statusCode(400))
                 .shouldHave(Conditions.hasMessage("Login already exist"));
     }
 
 
     @Test
-    public void negativeRegisterNewUserWithoutPassTest(@RandomUser User user) {
-        user.setPass(null);
-        userService.register(user)
+    public void negativeRegisterNewUserWithoutPassTest() {
+        randomTestUser.setPass(null);
+        userService.register(randomTestUser)
                 .shouldHave(Conditions.statusCode(400))
                 .shouldHave(Conditions.hasMessage("Missing login or password"));
 
     }
 
     @Test
-    public void deleteUserTestSuccess(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void deleteUserTestSuccess() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
         userService.deleteAuthedUser()
                 .shouldHave(Conditions.statusCode(200))
                 .shouldHave(Conditions.hasMessage("User successfully deleted"));
@@ -105,8 +102,8 @@ public class UserTests extends TestBase {
     }
 
     @Test
-    public void invalidAuthTest(@RandomUser User user) {
-        userService.login(user)
+    public void invalidAuthTest() {
+        userService.login(randomTestUser)
                 .shouldHave(Conditions.statusCode(401));
     }
 

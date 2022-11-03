@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import services.GameService;
 
 
 import java.util.ArrayList;
@@ -22,10 +23,12 @@ import java.util.List;
 
 import static testdata.TestData.ADMIN_USER;
 
-@ExtendWith({AllureLoggingListener.class, RandomUserParameterExtension.class})
+@ExtendWith(AllureLoggingListener.class)
 public class GamesApiTest extends TestBase {
 
-    private Game addRandomGame(boolean witDlc){
+    private final GameService gameService = new GameService();
+
+    private Game addRandomGame(boolean witDlc) {
         return gameService.addRandomGame(witDlc).as("register_data", Game.class);
     }
 
@@ -55,9 +58,9 @@ public class GamesApiTest extends TestBase {
     }
 
     @Test
-    public void deleteGameSuccess(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void deleteGameSuccess() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         List<Game> gamesBefore = gameService.getGames().asList(Game.class);
         Game game = gameService.addRandomGame(false).as("register_data", Game.class);
@@ -72,33 +75,36 @@ public class GamesApiTest extends TestBase {
         List<Game> gamesAfterDeleteGame = gameService.getGames().asList(Game.class);
 
         Assertions.assertEquals(gamesBefore.size(), gamesAfterDeleteGame.size(), "Game not deleted");
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void deleteDlcGameNotFound(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void deleteDlcGameNotFound() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
         gameService.deleteGame(-1)
                 .shouldHave(Conditions.statusCode(400))
                 .shouldHave(Conditions.hasMessage("Game with this id not exist"));
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void deleteDlcIfListNull(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void deleteDlcIfListNull() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         Game game = addRandomGame(true);
 
         gameService.deleteListDlc(game.getGameId(), new ArrayList<>())
                 .shouldHave(Conditions.statusCode(400))
                 .shouldHave(Conditions.hasMessage("List with DLC to delete cant be empty or null"));
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void deleteDlcSuccess(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void deleteDlcSuccess() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         Game game = addRandomGame(true);
         List<DLC> toDeleteDlc = Collections.singletonList(game.getDlcs().get(0));
@@ -109,23 +115,25 @@ public class GamesApiTest extends TestBase {
         Game deletedDlc = gameService.getGame(game.getGameId()).as(Game.class);
 
         Assertions.assertNotEquals(game.getDlcs().size(), deletedDlc.getDlcs().size());
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void updateDlcInfoWithoutDlc(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void updateDlcInfoWithoutDlc() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         Game game = addRandomGame(true);
         gameService.updateListDlc(game.getGameId(), new ArrayList<>())
                 .shouldHave(Conditions.statusCode(400))
                 .shouldHave(Conditions.hasMessage("Empty body with list of dlc to modify"));
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void updateDlcInfoSuccess(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void updateDlcInfoSuccess() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         Game game = addRandomGame(true);
         DLC firstDlcToUpdate = game.getDlcs().get(0);
@@ -140,12 +148,13 @@ public class GamesApiTest extends TestBase {
         Game gameUpdated = gameService.getGame(game.getGameId()).as(Game.class);
 
         Assertions.assertNotEquals(game.getDlcs().get(0), gameUpdated.getDlcs().get(0));
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void addFreeGameWithPriceError(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void addFreeGameWithPriceError() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         Game game = Utils.generateRandomGame(true);
         game.setIsFree(true);
@@ -154,12 +163,13 @@ public class GamesApiTest extends TestBase {
         gameService.addGame(game)
                 .shouldHave(Conditions.statusCode(400))
                 .shouldHave(Conditions.hasMessage("Free DLC or Game cant have price more than 0.0$"));
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void addFreeGameWithDlcPriceError(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void addFreeGameWithDlcPriceError() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         Game game = Utils.generateRandomGame(true);
         game.setIsFree(true);
@@ -170,34 +180,37 @@ public class GamesApiTest extends TestBase {
         gameService.addGame(game)
                 .shouldHave(Conditions.statusCode(400))
                 .shouldHave(Conditions.hasMessage("Free DLC or Game cant have price more than 0.0$"));
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void addGameSuccess(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void addGameSuccess() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         gameService.addRandomGame(true)
                 .shouldHave(Conditions.statusCode(201))
                 .shouldHave(Conditions.hasMessage("Game created"));
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void updateGameIdFieldError(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void updateGameIdFieldError() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         Game game = addRandomGame(true);
         UpdField updField = new UpdField("gameId", 10);
         gameService.updateField(game.getGameId(), updField)
                 .shouldHave(Conditions.statusCode(400))
                 .shouldHave(Conditions.hasMessage("Cannot edit ID field"));
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void updateNonExistFieldError(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void updateNonExistFieldError() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         Game game = addRandomGame(true);
         UpdField updField = new UpdField("fakeField", 10);
@@ -205,12 +218,13 @@ public class GamesApiTest extends TestBase {
         gameService.updateField(game.getGameId(), updField)
                 .shouldHave(Conditions.statusCode(400))
                 .shouldHave(Conditions.hasMessage("Cannot find field"));
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void updateFieldWithIncorrectType(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void updateFieldWithIncorrectType() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         Game game = addRandomGame(true);
         UpdField updField = new UpdField("title", 10);
@@ -218,12 +232,13 @@ public class GamesApiTest extends TestBase {
         gameService.updateField(game.getGameId(), updField)
                 .shouldHave(Conditions.statusCode(400))
                 .shouldHave(Conditions.hasMessage("Cannot set new value because field has incorrect type"));
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void updateFieldWithSameValue(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void updateFieldWithSameValue() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         Game game = addRandomGame(true);
         UpdField updField = new UpdField("title", game.getTitle());
@@ -231,12 +246,13 @@ public class GamesApiTest extends TestBase {
         gameService.updateField(game.getGameId(), updField)
                 .shouldHave(Conditions.statusCode(400))
                 .shouldHave(Conditions.hasMessage("New field value is same as before"));
+        userService.deleteAuthedUser();
     }
 
     @Test
-    public void updateFieldSuccess(@RandomUser User user) {
-        userService.register(user);
-        userService.login(user);
+    public void updateFieldSuccess() {
+        userService.register(randomTestUser);
+        userService.login(randomTestUser);
 
         Game game = addRandomGame(true);
         UpdField updField = new UpdField("title", "new title");
@@ -244,6 +260,7 @@ public class GamesApiTest extends TestBase {
         gameService.updateField(game.getGameId(), updField)
                 .shouldHave(Conditions.statusCode(200))
                 .shouldHave(Conditions.hasMessage("New value edited successfully on field title"));
+        userService.deleteAuthedUser();
     }
 
 }

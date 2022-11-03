@@ -12,8 +12,8 @@ import static io.restassured.RestAssured.given;
 
 @Slf4j
 public class FileService extends WebService {
-    public FileService(String basePath) {
-        super(basePath);
+    public FileService() {
+        super("/files/");
     }
 
     public AssertableResponse getBaseImage() {

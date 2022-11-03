@@ -11,18 +11,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import models.trains.ApiVersion;
 import models.trains.CarBrands;
 import models.trains.MixedFields;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
 import static helpers.Constants.*;
 
 @RestController
-public class JsonsTrainController {
+public class ResponseTrainController {
 
     private final JsonDB jsonDB = new JsonDB();
     private final ObjectMapper mapper = new ObjectMapper();
@@ -80,5 +83,15 @@ public class JsonsTrainController {
     @ResponseBody
     public ResponseEntity<ApiVersion> getCurrentApiVersion() {
         return ResponseEntity.status(200).body(new ApiVersion("1.0.2"));
+    }
+
+    @Operation(summary = "Перенаправляет на определенный адрес и возвращает статус код 301")
+    @GetMapping(path = "/api/easy/redirect", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ModelAndView redirectTo301(){
+        RedirectView rv = new RedirectView();
+        rv.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
+        rv.setUrl("http://google.com");
+        return new ModelAndView(rv);
     }
 }

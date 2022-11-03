@@ -4,14 +4,20 @@ package services;
 import assections.AssertableResponse;
 import io.restassured.response.ValidatableResponse;
 import jwt.models.JwtRequest;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import models.user.ChangeUserPass;
 import models.user.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 
 @Slf4j
 public class UserService extends WebService {
-    public UserService(String basePath) {
-        super(basePath);
+    public UserService() {
+        super("/");
     }
 
     public AssertableResponse register(User user) {

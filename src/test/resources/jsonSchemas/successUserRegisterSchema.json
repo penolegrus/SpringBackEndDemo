@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "register_data": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "pass": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "games": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "login",
+        "pass",
+        "id",
+        "games"
+      ]
+    },
+    "info": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "message"
+      ]
+    }
+  },
+  "required": [
+    "register_data",
+    "info"
+  ]
+}

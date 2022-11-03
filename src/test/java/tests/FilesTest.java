@@ -5,6 +5,7 @@ import extensions.CustomLogFilter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import services.FileService;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,8 @@ import static io.restassured.RestAssured.given;
 
 
 public class FilesTest extends TestBase {
+
+    private final FileService fileService = new FileService();
 
     @Test
     public void downloadFileTest() {

@@ -3,8 +3,8 @@ package services;
 import assections.AssertableResponse;
 
 public class JsonService extends WebService{
-    public JsonService(String basePath) {
-        super(basePath);
+    public JsonService() {
+        super("/easy/");
     }
 
     public AssertableResponse getVersion(){
@@ -17,5 +17,9 @@ public class JsonService extends WebService{
 
     public AssertableResponse getCarBrands(){
         return new AssertableResponse(requestSpec.get("carBrands").then());
+    }
+
+    public AssertableResponse getRedirect301(){
+        return new AssertableResponse(requestSpec.redirects().follow(false).get("redirect").then());
     }
 }

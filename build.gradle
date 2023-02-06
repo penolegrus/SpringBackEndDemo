@@ -30,12 +30,11 @@ dependencies {
     testImplementation 'io.qameta.allure:allure-java-commons:2.12.1'
     testImplementation 'io.qameta.allure:allure-junit5:2.12.1'
 
-
     implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
 }
 
 test {
-    useTestNG()
+    useJUnitPlatform()
 }

@@ -64,4 +64,7 @@ public class Conditions {
     public static MatchesJsonSchemaCondition hasSchema(File schema){
         return new MatchesJsonSchemaCondition(schema);
     }
+    public static KeyNotEqualTo keyNotEqualTo(String key, Object value) {
+        return new KeyNotEqualTo(value,key);
+    }
 }

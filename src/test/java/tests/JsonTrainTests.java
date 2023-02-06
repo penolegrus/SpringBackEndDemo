@@ -1,18 +1,23 @@
 package tests;
 
+import assections.Conditions;
+import com.fasterxml.jackson.core.type.TypeReference;
 import core.TestBase;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import models.trains.ApiVersion;
 import models.trains.CarBrands;
 import models.trains.NumbersPow;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 import services.JsonService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
@@ -22,15 +27,19 @@ public class JsonTrainTests extends TestBase {
 
     @Test
     public void redirectTest(){
-        Response response = jsonService.getRedirect301().asResponse();
-        Assertions.assertEquals(response.getHeaders().get("Location").getValue(), "http://google.com");
+        jsonService.getRedirect301()
+                .shouldHave(Conditions.statusCode(301))
+                .shouldHave(Conditions.header("Location", "https://www.youtube.com/@net_vlador"));
     }
 
     @Test
     public void apiVersionTest(){
-        ApiVersion version = jsonService.getVersion().as(ApiVersion.class);
-        Assertions.assertTrue(version.getApiVersion().matches("^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$"));
-        System.out.println(version);
+        //ApiVersion version = jsonService.getVersion().as(ApiVersion.class);
+        //Assertions.assertTrue(version.getApiVersion().matches("^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$"));
+
+        ApiVersion versionGeneric = jsonService.getVersionWithGeneric().asObject();
+        Assertions.assertTrue(versionGeneric.getApiVersion().matches("^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$"));
+        System.out.println(versionGeneric);
     }
 
     @Test
@@ -41,7 +50,7 @@ public class JsonTrainTests extends TestBase {
 
     @Test
     public void carsTest(){
-        List<CarBrands> cars = jsonService.getCarBrands().asList(CarBrands.class);
+        List<CarBrands> cars = jsonService.getCarBrandsGeneric().asObject();
 
         String bmwBrand = "bmw";
         boolean isX3Exists = cars.stream()

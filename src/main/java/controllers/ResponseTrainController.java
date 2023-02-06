@@ -30,7 +30,6 @@ public class ResponseTrainController {
     private final JsonDB jsonDB = new JsonDB();
     private final ObjectMapper mapper = new ObjectMapper();
 
-
     @Operation(summary = "Получает список с машинами")
     @ApiResponses(value = {
             @ApiResponse(
@@ -91,7 +90,7 @@ public class ResponseTrainController {
     public ModelAndView redirectTo301(){
         RedirectView rv = new RedirectView();
         rv.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
-        rv.setUrl("http://google.com");
+        rv.setUrl("https://www.youtube.com/@net_vlador");
         return new ModelAndView(rv);
     }
 }

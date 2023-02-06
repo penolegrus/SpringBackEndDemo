@@ -10,7 +10,6 @@ public class StatusCodeCondition implements Condition {
 
     private int statusCode;
 
-
     @Override
     public void check(ValidatableResponse response) {
         response.assertThat().statusCode(statusCode);

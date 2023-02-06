@@ -1,5 +1,6 @@
 package core;
 
+import extensions.listeners.AllureLoggingListener;
 import extensions.parameter_extension.RandomUser;
 import extensions.parameter_extension.RandomUserParameterExtension;
 import io.restassured.RestAssured;
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import services.UserService;
 
-@ExtendWith(RandomUserParameterExtension.class)
+@ExtendWith({AllureLoggingListener.class, RandomUserParameterExtension.class})
 public class TestBase {
 
     protected User randomTestUser;
@@ -19,7 +20,7 @@ public class TestBase {
 
     @BeforeAll
     static void setUpTests() {
-        RestAssured.baseURI = "http://localhost:8080/api";
+        RestAssured.baseURI = "http://85.192.34.140:8080/api";
         userService = new UserService();
     }
     @BeforeEach

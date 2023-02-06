@@ -2,16 +2,18 @@ package services;
 
 
 import assections.AssertableResponse;
+import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import jwt.models.JwtRequest;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import models.user.ChangeUserPass;
 import models.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import org.junit.jupiter.api.Assertions;
+
+import static io.restassured.RestAssured.given;
+import static java.util.concurrent.CompletableFuture.anyOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static sun.nio.cs.Surrogate.is;
 
 
 @Slf4j
@@ -30,9 +32,9 @@ public class UserService extends WebService {
         return new AssertableResponse(requestSpec.auth().oauth2(jwt).get("user").then());
     }
 
-    public AssertableResponse updatePassword(ChangeUserPass password) {
+    public AssertableResponse updatePassword(String password) {
         log.info("update user's password {}", password);
-        return new AssertableResponse(requestSpec.auth().oauth2(jwt).body(password).put("user").then());
+        return new AssertableResponse(requestSpec.auth().oauth2(jwt).body(new ChangeUserPass(password)).put("user").then());
     }
 
     public AssertableResponse login(User user) {

@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        String[] nonAuthEndpoints = {"/api/login", "/api/register", "/api/users",
+        String[] nonAuthEndpoints = {"/api/login", "/api/register", "/api/users", "/api/vk/steps",
                 "/api/files/**",
                 "/api/easy/**",
                 "/api/bad-request", "/api/created", "/api/forbidden", "/api/invalid-url", "/api/moved", "/api/no-content",

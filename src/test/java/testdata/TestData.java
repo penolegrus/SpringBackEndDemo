@@ -1,7 +1,9 @@
 package testdata;
 
-import models.user.User;
+
+import db_models.User;
+import dto.UserDTO;
 
 public class TestData {
-    public static User ADMIN_USER = new User("admin", "admin");
+    public static UserDTO ADMIN_USER = new UserDTO("admin", "admin");
 }

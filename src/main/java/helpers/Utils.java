@@ -1,10 +1,10 @@
 package helpers;
 
 import com.github.javafaker.Faker;
-import models.game.AdditionalData;
-import models.game.DLC;
+import db_models.game.AdditionalData;
+import db_models.game.DLC;
 import models.game.Game;
-import models.game.Requirements;
+import db_models.game.Requirements;
 
 
 import java.security.SecureRandom;
@@ -31,6 +31,7 @@ public class Utils {
     public static int getRandomInt() {
         return Math.abs(new Random().nextInt());
     }
+
 
     public static String getRandomOS() {
         return Stream.of("Mac OS", "Windows 7", "Windows 8", "Playstation 3", "Playstation 4",
@@ -73,6 +74,47 @@ public class Utils {
 
     public static Game generateRandomGame(){
         return generateRandomGame(rnd.nextBoolean());
+    }
+
+    public static db_models.game.Game generateGameForDb(boolean withDlc){
+        Faker faker = new Faker();
+        Random random = new Random();
+        db_models.game.Game game = new db_models.game.Game();
+        game.setCompany(getRandomGameCompany());
+        game.setDescription(faker.gameOfThrones().character() + " in main character in this game. Also some strange words " + faker.hacker().adjective());
+        game.setTitle(faker.commerce().productName());
+        game.setTags(getRandomTags());
+        game.setGenre(getRandomGenre());
+        game.setRequiredAge(random.nextBoolean());
+        game.setRating(random.nextInt(10));
+        boolean isFree = random.nextBoolean();
+        if (isFree) {
+            game.setIsFree(true);
+            game.setPrice(0.0);
+        } else {
+            game.setIsFree(false);
+            game.setPrice(getRandomPrice());
+        }
+
+        game.setPublish_date(LocalDateTime.now());
+
+        game.setRequirements(new Requirements(getRandomOS(), random.nextInt(18), random.nextInt(90), "Nvidea RTX " + 1000 + random.nextInt(2050)));
+        List<DLC> listOfDls = new ArrayList<>();
+        if (withDlc) {
+            for (int i = 1; i <= 1+random.nextInt(5); i++) {
+                boolean isDlcFree = random.nextBoolean();
+                if (isDlcFree) {
+                    listOfDls.add(new DLC(true, "Random DLC Name " + faker.funnyName().name(), random.nextInt(10), "Random DLC Description " + randomString(20), 0.0,
+                            new AdditionalData("Recommended another game with dlc: " + faker.beer().name(), true)));
+                } else {
+                    listOfDls.add(new DLC(false, "Random DLC Name " + faker.animal().name(), random.nextInt(10), "Random DLC Description " + randomString(20), getRandomPrice(),
+                            new AdditionalData("Recommended another game with dlc: " + faker.beer().name(), false)));
+                }
+            }
+        }
+        game.setDlcs(listOfDls);
+
+        return game;
     }
 
     public static Game generateRandomGame(boolean withDlc) {

@@ -1,13 +1,18 @@
-package models.game;
+package db_models.game;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Embeddable
+
 public class AdditionalData {
     private String dlcNameFromAnotherGame;
-    private boolean isFree;
+    private Boolean isFree;
 }

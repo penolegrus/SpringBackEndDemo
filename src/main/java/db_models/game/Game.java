@@ -1,19 +1,23 @@
-package models.game;
+package db_models.game;
 
-import db_models.game.DLC;
-import db_models.game.Requirements;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import models.game.UpdField;
 
+import javax.persistence.*;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.List;
+
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Game {
-    private Integer gameId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long gameId;
     private String title;
     private String genre;
     private Boolean requiredAge;
@@ -23,16 +27,11 @@ public class Game {
     private LocalDateTime publish_date;
     private Integer rating;
     private String description;
+    @ElementCollection(targetClass=String.class)
     private List<String> tags;
+    @ElementCollection(targetClass=DLC.class)
     private List<DLC> dlcs;
     private Requirements requirements;
-
-    public boolean isTypeOfNewFieldCorrect(UpdField updField){
-        try {
-            return this.getClass().getDeclaredField(updField.getFieldName()).getType().isAssignableFrom(updField.getValue().getClass());
-        } catch (Exception ignored){}
-        return false;
-    }
 
     public boolean isFieldExist(String name){
         try {
@@ -41,7 +40,6 @@ public class Game {
         } catch (Exception ignored){}
         return false;
     }
-
     public boolean isNewFieldHasSameValue(String name, Object newValue){
         try{
             Field field = this.getClass().getDeclaredField(name);
@@ -62,5 +60,11 @@ public class Game {
             return this;
         } catch (Exception ignored){}
         return null;
+    }
+    public boolean isTypeOfNewFieldCorrect(UpdField updField){
+        try {
+            return this.getClass().getDeclaredField(updField.getFieldName()).getType().isAssignableFrom(updField.getValue().getClass());
+        } catch (Exception ignored){}
+        return false;
     }
 }

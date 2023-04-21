@@ -64,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/configuration/security",
                 "/swagger-ui/**",
                 "/webjars/**",
+                "/api/signup",
                 CAR_BRAND_API_URL, NUMS_API_URL};
 
         // Отключаем csrf

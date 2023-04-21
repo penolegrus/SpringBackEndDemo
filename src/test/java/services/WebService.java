@@ -8,7 +8,7 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.AfterEach;
 
 public abstract class WebService {
-    protected String jwt;
+    protected static String jwt;
     private final String basePath;
     protected RequestSpecification requestSpec;
     public void resetSpec(){

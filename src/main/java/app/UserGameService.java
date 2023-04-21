@@ -1,7 +1,7 @@
 package app;
 
 import models.user.User;
-import models.game.DLC;
+import db_models.game.DLC;
 import models.game.Game;
 
 import java.util.List;

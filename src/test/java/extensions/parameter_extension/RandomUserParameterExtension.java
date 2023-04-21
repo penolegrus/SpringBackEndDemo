@@ -1,7 +1,8 @@
 package extensions.parameter_extension;
 
+import db_models.User;
+import dto.UserDTO;
 import helpers.Utils;
-import models.user.User;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -23,10 +24,9 @@ public class RandomUserParameterExtension implements ParameterResolver {
 
     private Object generateUser(Parameter parameter) {
         Class<?> type = parameter.getType();
-        if (User.class.equals(type)) {
-            return new User("test" + Utils.getRandomInt(), "pass" + Utils.getRandomInt(),
-                    Utils.getRandomInt(),
-                    Collections.singletonList(Utils.generateRandomGame(true, 1)));
+        if (UserDTO.class.equals(type)) {
+            return new UserDTO("test" + Utils.getRandomInt(), "pass" + Utils.getRandomInt(),
+                    Collections.singletonList(Utils.generateGameForDb(true)));
         }
         throw new ParameterResolutionException("No random user is generated for " + type);
     }

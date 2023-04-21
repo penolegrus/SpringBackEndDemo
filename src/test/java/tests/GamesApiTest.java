@@ -1,20 +1,13 @@
 package tests;
 
-import assections.Conditions;
 import core.TestBase;
-import extensions.listeners.AllureLoggingListener;
-import extensions.parameter_extension.RandomUser;
-import extensions.parameter_extension.RandomUserParameterExtension;
 import helpers.Utils;
-import models.user.User;
-import models.game.DLC;
+import db_models.game.DLC;
 import models.game.Game;
 import models.game.UpdField;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import services.GameService;
 
 
@@ -37,7 +30,7 @@ public class GamesApiTest extends TestBase {
     @Test
     public void testGetGameByIdSuccess() {
         userService.login(ADMIN_USER);
-        Game game = gameService.getGame(1)
+        Game game = gameService.getGame(10)
                 .shouldHave(statusCode(200))
                 .as(Game.class);
         Assertions.assertNotNull(game);
@@ -54,7 +47,7 @@ public class GamesApiTest extends TestBase {
     @Test
     public void deleteBaseGame() {
         userService.login(ADMIN_USER);
-        gameService.deleteGame(1)
+        gameService.deleteGame(10)
                 .shouldHave(statusCode(400))
                 .shouldHave(hasMessage("Cant delete game from base users"));
     }

@@ -2,18 +2,53 @@ package tests;
 
 import assections.Conditions;
 import core.TestBase;
+import db_models.User;
+import db_models.game.Game;
+import dto.UserDTO;
+import helpers.Utils;
+import io.restassured.http.ContentType;
+import io.restassured.response.ValidatableResponse;
+import jwt.models.JwtRequest;
 import models.user.ChangeUserPass;
-import models.user.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import static assections.Conditions.*;
+import static io.restassured.RestAssured.given;
 import static testdata.TestData.ADMIN_USER;
 
 
 public class UserTests extends TestBase {
+
+    @Test
+    public void addDbTest(){
+        Game game = Utils.generateGameForDb(false);
+        UserDTO userDTO = new UserDTO("nogames", "keks", new ArrayList<>());
+        given().contentType(ContentType.JSON)
+                .body(userDTO)
+                .post("http://localhost:8080/api/signup")
+                .then().log().all();
+    }
+
+    @Test
+    public void updatePassTest(){
+        JwtRequest jwtRequest = new JwtRequest("threadqa", "iloveqa");
+
+        String jwt = given().contentType(ContentType.JSON)
+                .body(jwtRequest)
+                .post("http://localhost:8080/api/login").then().log().all()
+                .extract().body().jsonPath().get("token");
+
+        given().contentType(ContentType.JSON)
+                .auth().oauth2(jwt)
+                .body(new ChangeUserPass("newpass"))
+                .put("http://localhost:8080/api/user")
+                .then().log().all();
+    }
 
     @Test
     public void testChangPassPositive() {
@@ -43,7 +78,7 @@ public class UserTests extends TestBase {
 
     @Test
     public void updateUserPassBaseUserNegative() {
-        userService.login(new User("admin", "admin"));
+        userService.login(new UserDTO("admin", "admin"));
         userService.updatePassword("newPassword")
                 .shouldHave(statusCode(400))
                 .shouldHave(hasMessage("Cant update base users"));

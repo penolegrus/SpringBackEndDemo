@@ -1,6 +1,7 @@
 package tests;
 
 import core.TestBase;
+import dto.UserDTO;
 import helpers.Utils;
 import db_models.game.DLC;
 import models.game.Game;
@@ -25,6 +26,14 @@ public class GamesApiTest extends TestBase {
 
     private Game addRandomGame(boolean witDlc) {
         return gameService.addRandomGame(witDlc).as("register_data", Game.class);
+    }
+
+    @Test
+    public void getGamesDb(){
+        userService.login(new UserDTO("user5","keks", new ArrayList<>()));
+        List<Game> games = gameService.getGames().asList(Game.class);
+        gameService.getGame(games.stream().filter(x->x.getGameId().equals(26))
+                .findFirst().orElseThrow(()-> new IllegalStateException("no game found")).getGameId());
     }
 
     @Test
@@ -186,7 +195,7 @@ public class GamesApiTest extends TestBase {
         gameService.addRandomGame(true)
                 .shouldHave(statusCode(201))
                 .shouldHave(hasMessage("Game created"));
-        userService.deleteAuthedUser();
+       // userService.deleteAuthedUser();
     }
 
     @Test

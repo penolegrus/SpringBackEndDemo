@@ -14,7 +14,7 @@ public class UserGameService {
     }
 
     public boolean isLimitForGames(){
-        return user.getGames().size() <= 20;
+        return user.getGames().size() > 20;
     }
 
     public Game findGameById(Integer id) {

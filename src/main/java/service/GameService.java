@@ -16,6 +16,7 @@ import repo.UserRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -185,6 +186,6 @@ public class GameService extends JwtService {
 
     private boolean isLimitForGames(String authHeader) {
         User user = getUserFromJwt(authHeader);
-        return user.getGames().size() <= 20;
+        return user.getGames().size() > 20;
     }
 }

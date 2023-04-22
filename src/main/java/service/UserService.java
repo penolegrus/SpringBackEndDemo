@@ -24,6 +24,9 @@ public class UserService extends JwtService {
     public ResponseEntity<?> signUp(UserDTO userDTO) {
         if (!userRepository.existsByLogin(userDTO.getLogin())) {
             User user = new User(userDTO.getLogin(), userDTO.getPass(), userDTO.getGames());
+            if(user.getGames().size() > 20){
+                return ResponseEntity.status(201).body(new InfoMessage("fail", "User cant have more than 20 games on registration"));
+            }
             userRepository.save(user);
             userRepository.flush();
             return ResponseEntity.status(201).body(new SuccessRegisterResponse(user,

@@ -14,8 +14,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 import static assections.Conditions.*;
 import static io.restassured.RestAssured.given;
@@ -26,8 +25,12 @@ public class UserTests extends TestBase {
 
     @Test
     public void addDbTest(){
-        Game game = Utils.generateGameForDb(false);
-        UserDTO userDTO = new UserDTO("nogames", "keks", new ArrayList<>());
+        List<Game> games = new ArrayList<>();
+        for (int i = 0; i < 1; i++) {
+            games.add(Utils.generateGameForDb(false));
+        }
+
+        UserDTO userDTO = new UserDTO("admin", "admin", games);
         given().contentType(ContentType.JSON)
                 .body(userDTO)
                 .post("http://localhost:8080/api/signup")
@@ -78,7 +81,7 @@ public class UserTests extends TestBase {
 
     @Test
     public void updateUserPassBaseUserNegative() {
-        userService.login(new UserDTO("admin", "admin"));
+        userService.login(new UserDTO("admin", "admin", new ArrayList<>()));
         userService.updatePassword("newPassword")
                 .shouldHave(statusCode(400))
                 .shouldHave(hasMessage("Cant update base users"));

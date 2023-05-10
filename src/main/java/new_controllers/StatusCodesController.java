@@ -1,4 +1,4 @@
-package controllers;
+package new_controllers;
 
 import models.trains.StatusCode;
 import org.springframework.http.MediaType;

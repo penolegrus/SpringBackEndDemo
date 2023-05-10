@@ -3,7 +3,7 @@ package helpers;
 import com.github.javafaker.Faker;
 import db_models.game.AdditionalData;
 import db_models.game.DLC;
-import models.game.Game;
+import db_models.game.Game;
 import db_models.game.Requirements;
 
 
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,15 +33,21 @@ public class Utils {
         return Math.abs(new Random().nextInt());
     }
 
+    private static String getRandomFrom(String[] values){
+        return values[ThreadLocalRandom.current().nextInt(values.length) % values.length];
+
+    }
 
     public static String getRandomOS() {
-        return Stream.of("Mac OS", "Windows 7", "Windows 8", "Playstation 3", "Playstation 4",
-                "Playstation 5", "XBOX 360", "XBOX ONE", "WINDOWS 10").findAny().get();
+        String[] os = new String[]{"Mac OS", "Windows 7", "Windows 8", "Playstation 3", "Playstation 4",
+                "Playstation 5", "XBOX 360", "XBOX ONE", "WINDOWS 10"};
+        return getRandomFrom(os);
     }
 
     public static String getRandomGameCompany() {
-        return Stream.of("Valve", "Microsoft", "DICE", "Ubisoft", "RockStar",
-                "Activision", "Blizzard", "EA Games", "Sony").findAny().get();
+        String[] companies = new String[]{"Valve", "Microsoft", "DICE", "Ubisoft", "RockStar",
+                "Activision", "Blizzard", "EA Games", "Sony"};
+        return getRandomFrom(companies);
     }
 
     public static List<String> getRandomTags() {
@@ -50,12 +57,12 @@ public class Utils {
     }
 
     public static String getRandomGenre() {
-        return getRandomTags().stream().findAny().get();
+        List<String> tags = getRandomTags();
+        return getRandomFrom(tags.toArray(new String[0]));
     }
 
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
-
         long factor = (long) Math.pow(10, places);
         value = value * factor;
         long tmp = Math.round(value);
@@ -66,7 +73,7 @@ public class Utils {
         return round(100.0 + (10.000 - 100.0) * random.nextDouble(), 3);
     }
 
-    public static Game generateRandomGame(boolean withDlc, int gameId){
+    public static Game generateRandomGame(boolean withDlc, long gameId){
         Game game = generateRandomGame(withDlc);
         game.setGameId(gameId);
         return game;
@@ -122,7 +129,7 @@ public class Utils {
         Random random = new Random();
         Game game = new Game();
         game.setCompany(getRandomGameCompany());
-        game.setGameId(getRandomInt());
+       // game.setGameId(getRandomInt());
         game.setDescription(faker.gameOfThrones().character() + " in main character in this game. Also some strange words " + faker.hacker().adjective());
         game.setTitle(faker.commerce().productName());
         game.setTags(getRandomTags());

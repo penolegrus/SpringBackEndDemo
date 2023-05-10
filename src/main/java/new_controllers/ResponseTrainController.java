@@ -1,4 +1,4 @@
-package controllers;
+package new_controllers;
 
 import app.JsonDB;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,7 +22,8 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
-import static helpers.Constants.*;
+import static helpers.Constants.CAR_BRAND_API_URL;
+import static helpers.Constants.NUMS_API_URL;
 
 @RestController
 public class ResponseTrainController {

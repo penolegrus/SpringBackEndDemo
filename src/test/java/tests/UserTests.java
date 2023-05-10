@@ -23,35 +23,35 @@ import static testdata.TestData.ADMIN_USER;
 
 public class UserTests extends TestBase {
 
-    @Test
-    public void addDbTest(){
-        List<Game> games = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
-            games.add(Utils.generateGameForDb(false));
-        }
+//    @Test
+//    public void addDbTest(){
+//        List<Game> games = new ArrayList<>();
+//        for (int i = 0; i < 1; i++) {
+//            games.add(Utils.generateGameForDb(false));
+//        }
+//
+//        UserDTO userDTO = new UserDTO("threadqa", "threadqa", games);
+//        given().contentType(ContentType.JSON)
+//                .body(userDTO)
+//                .post("http://localhost:8080/api/signup")
+//                .then().log().all();
+//    }
 
-        UserDTO userDTO = new UserDTO("admin", "admin", games);
-        given().contentType(ContentType.JSON)
-                .body(userDTO)
-                .post("http://localhost:8080/api/signup")
-                .then().log().all();
-    }
-
-    @Test
-    public void updatePassTest(){
-        JwtRequest jwtRequest = new JwtRequest("threadqa", "iloveqa");
-
-        String jwt = given().contentType(ContentType.JSON)
-                .body(jwtRequest)
-                .post("http://localhost:8080/api/login").then().log().all()
-                .extract().body().jsonPath().get("token");
-
-        given().contentType(ContentType.JSON)
-                .auth().oauth2(jwt)
-                .body(new ChangeUserPass("newpass"))
-                .put("http://localhost:8080/api/user")
-                .then().log().all();
-    }
+//    @Test
+//    public void updatePassTest(){
+//        JwtRequest jwtRequest = new JwtRequest("threadqa", "iloveqa");
+//
+//        String jwt = given().contentType(ContentType.JSON)
+//                .body(jwtRequest)
+//                .post("http://localhost:8080/api/login").then().log().all()
+//                .extract().body().jsonPath().get("token");
+//
+//        given().contentType(ContentType.JSON)
+//                .auth().oauth2(jwt)
+//                .body(new ChangeUserPass("newpass"))
+//                .put("http://localhost:8080/api/user")
+//                .then().log().all();
+//    }
 
     @Test
     public void testChangPassPositive() {
@@ -146,9 +146,9 @@ public class UserTests extends TestBase {
 
     @Test
     public void allUsersTest() {
-        String[] usersNames = userService.getAllUsers()
+        List<String> usersNames = userService.getAllUsers()
                 .shouldHave(statusCode(200))
-                .as("userLogins", String[].class);
-        Assertions.assertTrue(usersNames.length >= 3);
+                .asList(String.class);
+        Assertions.assertTrue(usersNames.size() >= 3);
     }
 }

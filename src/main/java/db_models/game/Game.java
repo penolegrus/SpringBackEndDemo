@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import models.game.UpdField;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.lang.reflect.Field;
@@ -16,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Game {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long gameId;
     private String title;
     private String genre;

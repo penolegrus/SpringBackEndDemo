@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import models.InfoMessage;
 import models.user.ChangeUserPass;
 import models.user.RegisterUserResponse;
-import models.user.UserLogins;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -68,7 +67,7 @@ public class UserControllerNew {
             @ApiResponse(
                     responseCode = "200",
                     description = "Информация о пользователе",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = models.user.User.class))),
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = User.class))),
     })
     @ResponseBody
     public ResponseEntity<User> getUser(@Parameter(description = "JWT токен")
@@ -82,7 +81,7 @@ public class UserControllerNew {
             @ApiResponse(
                     responseCode = "200",
                     description = "Список с логины всех существующих пользователей",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserLogins.class))),
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = String[].class))),
     })
     @ResponseBody
     public ResponseEntity<List<String>> getAllUserNames() {

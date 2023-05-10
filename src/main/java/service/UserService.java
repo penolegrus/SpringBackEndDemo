@@ -22,6 +22,9 @@ public class UserService extends JwtService {
     }
 
     public ResponseEntity<?> signUp(UserDTO userDTO) {
+        if(userDTO.getLogin() == null || userDTO.getPass() == null){
+            return ResponseEntity.status(400).body(new InfoMessage("fail", "Missing login or password"));
+        }
         if (!userRepository.existsByLogin(userDTO.getLogin())) {
             User user = new User(userDTO.getLogin(), userDTO.getPass(), userDTO.getGames());
             if(user.getGames().size() > 20){

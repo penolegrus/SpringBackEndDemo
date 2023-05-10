@@ -54,7 +54,12 @@ public class GameService extends JwtService {
         if (isBaseUser(user)) {
             return ResponseEntity.status(400).body(new InfoMessage("fail", "Cant delete game from base users"));
         }
-        gameRepository.delete(game);
+
+        user.getGames().removeIf(x->x.getGameId() == game.getGameId());
+        userRepository.save(user);
+        userRepository.flush();
+
+        gameRepository.deleteCascadeGameById(game.getGameId());
         gameRepository.flush();
 
         return ResponseEntity.status(200).body(new InfoMessage("success", "Game successfully deleted"));
@@ -100,7 +105,11 @@ public class GameService extends JwtService {
         user.getGames().add(newGame);
         userRepository.save(user);
         userRepository.flush();
-        return ResponseEntity.status(201).body(new SuccessGameResponse(newGame, new Message("success", "Game created")));
+
+        user = getUserFromJwt(authHeader);
+        Game freshGame = user.getGames().stream().reduce((first,second)->second).get();
+
+        return ResponseEntity.status(201).body(new SuccessGameResponse(freshGame, new Message("success", "Game created")));
     }
 
     public ResponseEntity<InfoMessage> updateGameField(Long gameId, UpdField updField, String authHeader) {

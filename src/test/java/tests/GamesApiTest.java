@@ -1,10 +1,10 @@
 package tests;
 
 import core.TestBase;
+import db_models.game.Game;
 import dto.UserDTO;
 import helpers.Utils;
 import db_models.game.DLC;
-import models.game.Game;
 import models.game.UpdField;
 import org.junit.jupiter.api.Assertions;
 
@@ -28,18 +28,18 @@ public class GamesApiTest extends TestBase {
         return gameService.addRandomGame(witDlc).as("register_data", Game.class);
     }
 
-    @Test
-    public void getGamesDb(){
-        userService.login(new UserDTO("user5","keks", new ArrayList<>()));
-        List<Game> games = gameService.getGames().asList(Game.class);
-        gameService.getGame(games.stream().filter(x->x.getGameId().equals(26))
-                .findFirst().orElseThrow(()-> new IllegalStateException("no game found")).getGameId());
-    }
+//    @Test
+//    public void getGamesDb(){
+//        userService.login(new UserDTO("admin","admin", new ArrayList<>()));
+//        List<Game> games = gameService.getGames().asList(Game.class);
+//        gameService.getGame(games.stream().filter(x->x.getGameId().equals(2))
+//                .findFirst().orElseThrow(()-> new IllegalStateException("no game found")).getGameId());
+//    }
 
     @Test
     public void testGetGameByIdSuccess() {
         userService.login(ADMIN_USER);
-        Game game = gameService.getGame(10)
+        Game game = gameService.getGame(2)
                 .shouldHave(statusCode(200))
                 .as(Game.class);
         Assertions.assertNotNull(game);
@@ -56,7 +56,8 @@ public class GamesApiTest extends TestBase {
     @Test
     public void deleteBaseGame() {
         userService.login(ADMIN_USER);
-        gameService.deleteGame(10)
+        long adminGameId = gameService.getGames().asList(Game.class).get(0).getGameId();
+        gameService.deleteGame(adminGameId)
                 .shouldHave(statusCode(400))
                 .shouldHave(hasMessage("Cant delete game from base users"));
     }

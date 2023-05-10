@@ -3,7 +3,7 @@ package controllers;
 import io.restassured.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import models.InfoMessage;
+import models.messages.InfoMessage;
 import models.VkSteps;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

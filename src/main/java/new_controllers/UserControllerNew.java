@@ -1,7 +1,6 @@
 package new_controllers;
 
-import db_models.User;
-import dto.UserDTO;
+import models.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import models.InfoMessage;
+import models.messages.InfoMessage;
 import models.user.ChangeUserPass;
 import models.user.RegisterUserResponse;
 import org.springframework.http.HttpHeaders;
@@ -37,7 +36,7 @@ public class UserControllerNew {
                     description = "Ошибка регистрации, неверные поля",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = InfoMessage.class)))
     })
-    public ResponseEntity<?> addUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> addUser(@RequestBody User userDTO) {
         return userService.signUp(userDTO);
     }
 
@@ -103,7 +102,7 @@ public class UserControllerNew {
     @ResponseBody
     public ResponseEntity<InfoMessage> deleteUserFromDb(@Parameter(description = "JWT токен")
                                                         @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
-       return userService.deleteUser(authHeader);
+        return userService.deleteUser(authHeader);
     }
 
 }

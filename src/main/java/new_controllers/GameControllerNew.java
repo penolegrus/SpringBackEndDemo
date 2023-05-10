@@ -1,7 +1,7 @@
 package new_controllers;
 
-import db_models.game.DLC;
-import db_models.game.Game;
+import models.game.DLC;
+import models.game.Game;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import models.InfoMessage;
+import models.messages.InfoMessage;
 import models.game.RegisterGameResponse;
 import models.game.UpdField;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +20,6 @@ import service.GameService;
 
 
 import java.util.List;
-import java.util.Set;
 
 
 @RestController
@@ -115,7 +114,7 @@ public class GameControllerNew {
                                                  @RequestBody(required = false) List<DLC> dls,
                                                  @Parameter(description = "Jwt токен")
                                                  @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
-        return gameService.deleteDlc(id,dls,authHeader);
+        return gameService.deleteDlc(id, dls, authHeader);
     }
 
 
@@ -136,7 +135,7 @@ public class GameControllerNew {
                                                        @Parameter(description = "обновляемое поле") @RequestBody UpdField updField,
                                                        @Parameter(description = "Jwt токен")
                                                        @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
-       return gameService.updateGameField(gameId,updField,authHeader);
+        return gameService.updateGameField(gameId, updField, authHeader);
     }
 
     @Operation(description = "Обновляет полностью список DLC у игры")
@@ -158,6 +157,6 @@ public class GameControllerNew {
                                                          @RequestBody(required = false) List<DLC> dlcs,
                                                          @Parameter(description = "Jwt токен")
                                                          @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
-       return gameService.updateGameDlcInfo(gameId, dlcs, authHeader);
+        return gameService.updateGameDlcInfo(gameId, dlcs, authHeader);
     }
 }

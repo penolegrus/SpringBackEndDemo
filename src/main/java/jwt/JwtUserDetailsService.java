@@ -1,6 +1,6 @@
 package jwt;
 
-import db_models.User;
+import models.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

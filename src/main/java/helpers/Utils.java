@@ -1,10 +1,10 @@
 package helpers;
 
 import com.github.javafaker.Faker;
-import db_models.game.AdditionalData;
-import db_models.game.DLC;
-import db_models.game.Game;
-import db_models.game.Requirements;
+import models.game.AdditionalData;
+import models.game.DLC;
+import models.game.Game;
+import models.game.Requirements;
 
 
 import java.security.SecureRandom;
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Utils {
     private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -83,10 +82,10 @@ public class Utils {
         return generateRandomGame(rnd.nextBoolean());
     }
 
-    public static db_models.game.Game generateGameForDb(boolean withDlc){
+    public static Game generateGameForDb(boolean withDlc){
         Faker faker = new Faker();
         Random random = new Random();
-        db_models.game.Game game = new db_models.game.Game();
+        Game game = new Game();
         game.setCompany(getRandomGameCompany());
         game.setDescription(faker.gameOfThrones().character() + " in main character in this game. Also some strange words " + faker.hacker().adjective());
         game.setTitle(faker.commerce().productName());

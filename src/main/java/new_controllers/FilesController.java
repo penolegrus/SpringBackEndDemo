@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import models.InfoMessage;
+import models.messages.InfoMessage;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -34,7 +34,7 @@ public class FilesController {
     @ResponseBody
     public ResponseEntity<Resource> downloadImage() throws IOException {
         File jpegOnServer = new File("/home/ubuntu/threadqa.jpeg");
-       // File jpeg = new File("src/main/resources/files/threadqa.jpeg");
+        // File jpeg = new File("src/main/resources/files/threadqa.jpeg");
 
         InputStreamResource resource = new InputStreamResource(Files.newInputStream(jpegOnServer.toPath()));
 
@@ -55,7 +55,7 @@ public class FilesController {
     @GetMapping(path = "/api/files/downloadLastUploaded", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> downloadLastUploaded() throws IOException {
-     //   File jpeg = new File("src/main/resources/files/uploadedFile");
+        //   File jpeg = new File("src/main/resources/files/uploadedFile");
         File jpegOnServer = new File("/home/ubuntu/uploadedFile");
 
 
@@ -90,11 +90,11 @@ public class FilesController {
     @PostMapping(path = "/api/files/upload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<InfoMessage> uploadFile(@Parameter(description = "File для загрузки с Content Type Multipart")
-                                                      @RequestParam("file") MultipartFile uploadFile) throws IOException {
+                                                  @RequestParam("file") MultipartFile uploadFile) throws IOException {
         String fileName = "uploadedFile";
 
         byte[] bytes = uploadFile.getBytes();
-   //     BufferedOutputStream stream = new BufferedOutputStream(Files.newOutputStream(Paths.get("src/main/resources/files/" + fileName)));
+        //     BufferedOutputStream stream = new BufferedOutputStream(Files.newOutputStream(Paths.get("src/main/resources/files/" + fileName)));
         BufferedOutputStream stream = new BufferedOutputStream(Files.newOutputStream(Paths.get("/home/ubuntu/" + fileName)));
         stream.write(bytes);
         stream.close();

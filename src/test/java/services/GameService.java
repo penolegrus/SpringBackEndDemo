@@ -1,9 +1,9 @@
 package services;
 
 import assections.AssertableResponse;
-import db_models.game.Game;
+import models.game.Game;
 import helpers.Utils;
-import db_models.game.DLC;
+import models.game.DLC;
 import models.game.UpdField;
 
 import java.util.List;

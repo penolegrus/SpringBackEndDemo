@@ -88,7 +88,7 @@ public class ResponseTrainController {
     @Operation(summary = "Перенаправляет на определенный адрес и возвращает статус код 301")
     @GetMapping(path = "/api/easy/redirect", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ModelAndView redirectTo301(){
+    public ModelAndView redirectTo301() {
         RedirectView rv = new RedirectView();
         rv.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         rv.setUrl("https://www.youtube.com/@net_vlador");

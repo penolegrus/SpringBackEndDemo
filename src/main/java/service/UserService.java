@@ -1,11 +1,11 @@
 package service;
 
-import db_models.User;
-import dto.SuccessRegisterResponse;
-import dto.UserDTO;
+import models.user.User;
+import models.user.RegisterUserResponse;
+
 import jwt.config.JwtTokenUtil;
-import models.InfoMessage;
-import models.Message;
+import models.messages.InfoMessage;
+import models.messages.Message;
 import models.user.ChangeUserPass;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class UserService extends JwtService {
         super(userRepository, jwtTokenUtil);
     }
 
-    public ResponseEntity<?> signUp(UserDTO userDTO) {
+    public ResponseEntity<?> signUp(User userDTO) {
         if(userDTO.getLogin() == null || userDTO.getPass() == null){
             return ResponseEntity.status(400).body(new InfoMessage("fail", "Missing login or password"));
         }
@@ -32,7 +32,7 @@ public class UserService extends JwtService {
             }
             userRepository.save(user);
             userRepository.flush();
-            return ResponseEntity.status(201).body(new SuccessRegisterResponse(user,
+            return ResponseEntity.status(201).body(new RegisterUserResponse(user,
                     new Message("success", "User created")));
         }
         return ResponseEntity.status(400).body(new InfoMessage("fail", "Login already exist"));

@@ -1,7 +1,6 @@
 package core;
 
-import db_models.User;
-import dto.UserDTO;
+import models.user.User;
 import extensions.listeners.AllureLoggingListener;
 import extensions.parameter_extension.RandomUser;
 import extensions.parameter_extension.RandomUserParameterExtension;
@@ -15,7 +14,7 @@ import services.UserService;
 @ExtendWith({AllureLoggingListener.class, RandomUserParameterExtension.class})
 public class TestBase {
 
-    protected UserDTO randomTestUser;
+    protected User randomTestUser;
 
     protected static UserService userService;
 
@@ -25,7 +24,7 @@ public class TestBase {
         userService = new UserService();
     }
     @BeforeEach
-    public void generateUser(@RandomUser UserDTO user){
+    public void generateUser(@RandomUser User user){
         randomTestUser = user;
     }
 

@@ -2,19 +2,14 @@ package services;
 
 
 import assections.AssertableResponse;
-import db_models.User;
-import dto.UserDTO;
-import io.restassured.response.Response;
+import models.user.User;
 import io.restassured.response.ValidatableResponse;
 import jwt.models.JwtRequest;
 import lombok.extern.slf4j.Slf4j;
 import models.user.ChangeUserPass;
-import org.junit.jupiter.api.Assertions;
 
 import static io.restassured.RestAssured.given;
-import static java.util.concurrent.CompletableFuture.anyOf;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static sun.nio.cs.Surrogate.is;
 
 
 @Slf4j
@@ -23,7 +18,7 @@ public class UserService extends WebService {
         super("/");
     }
 
-    public AssertableResponse register(UserDTO user) {
+    public AssertableResponse register(User user) {
         log.info("register user {}", user);
         return new AssertableResponse(requestSpec.body(user).post("signup").then());
     }
@@ -38,7 +33,7 @@ public class UserService extends WebService {
         return new AssertableResponse(requestSpec.auth().oauth2(jwt).body(new ChangeUserPass(password)).put("user").then());
     }
 
-    public AssertableResponse login(UserDTO user) {
+    public AssertableResponse login(User user) {
         JwtRequest jwtRequest = new JwtRequest(user.getLogin(), user.getPass());
         log.info("login user {}", jwtRequest);
         ValidatableResponse response = requestSpec.body(jwtRequest).post("login").then();

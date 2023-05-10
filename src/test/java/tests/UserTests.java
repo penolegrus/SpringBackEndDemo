@@ -2,14 +2,7 @@ package tests;
 
 import assections.Conditions;
 import core.TestBase;
-import db_models.User;
-import db_models.game.Game;
-import dto.UserDTO;
-import helpers.Utils;
-import io.restassured.http.ContentType;
-import io.restassured.response.ValidatableResponse;
-import jwt.models.JwtRequest;
-import models.user.ChangeUserPass;
+import models.user.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +10,6 @@ import java.io.File;
 import java.util.*;
 
 import static assections.Conditions.*;
-import static io.restassured.RestAssured.given;
 import static testdata.TestData.ADMIN_USER;
 
 
@@ -81,7 +73,7 @@ public class UserTests extends TestBase {
 
     @Test
     public void updateUserPassBaseUserNegative() {
-        userService.login(new UserDTO("admin", "admin", new ArrayList<>()));
+        userService.login(new User("admin", "admin"));
         userService.updatePassword("newPassword")
                 .shouldHave(statusCode(400))
                 .shouldHave(hasMessage("Cant update base users"));

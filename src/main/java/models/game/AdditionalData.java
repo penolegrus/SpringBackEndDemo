@@ -1,4 +1,4 @@
-package db_models.game;
+package models.game;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

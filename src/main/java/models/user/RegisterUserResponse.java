@@ -1,10 +1,9 @@
 package models.user;
 
-import db_models.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import models.Message;
+import models.messages.Message;
 
 @Data
 @AllArgsConstructor

@@ -1,10 +1,9 @@
 package models.game;
 
-import db_models.game.Game;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import models.Message;
+import models.messages.Message;
 
 @Data
 @AllArgsConstructor

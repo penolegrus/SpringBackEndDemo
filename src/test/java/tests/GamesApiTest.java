@@ -1,10 +1,9 @@
 package tests;
 
 import core.TestBase;
-import db_models.game.Game;
-import dto.UserDTO;
+import models.game.Game;
 import helpers.Utils;
-import db_models.game.DLC;
+import models.game.DLC;
 import models.game.UpdField;
 import org.junit.jupiter.api.Assertions;
 

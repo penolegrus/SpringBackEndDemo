@@ -3,7 +3,7 @@ package assections.conditions;
 import assections.Condition;
 import io.restassured.response.ValidatableResponse;
 import lombok.AllArgsConstructor;
-import models.Message;
+import models.messages.Message;
 import org.junit.jupiter.api.Assertions;
 
 @AllArgsConstructor

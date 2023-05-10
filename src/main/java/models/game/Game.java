@@ -1,10 +1,8 @@
-package db_models.game;
+package models.game;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import models.game.UpdField;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.lang.reflect.Field;

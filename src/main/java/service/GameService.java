@@ -1,12 +1,12 @@
 package service;
 
-import db_models.User;
-import db_models.game.DLC;
-import db_models.game.Game;
-import dto.SuccessGameResponse;
+import models.user.User;
+import models.game.DLC;
+import models.game.Game;
+import models.game.RegisterGameResponse;
 import jwt.config.JwtTokenUtil;
-import models.InfoMessage;
-import models.Message;
+import models.messages.InfoMessage;
+import models.messages.Message;
 import models.game.UpdField;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,6 @@ import repo.UserRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
@@ -55,7 +54,7 @@ public class GameService extends JwtService {
             return ResponseEntity.status(400).body(new InfoMessage("fail", "Cant delete game from base users"));
         }
 
-        user.getGames().removeIf(x->x.getGameId() == game.getGameId());
+        user.getGames().removeIf(x -> x.getGameId() == game.getGameId());
         userRepository.save(user);
         userRepository.flush();
 
@@ -107,9 +106,9 @@ public class GameService extends JwtService {
         userRepository.flush();
 
         user = getUserFromJwt(authHeader);
-        Game freshGame = user.getGames().stream().reduce((first,second)->second).get();
+        Game freshGame = user.getGames().stream().reduce((first, second) -> second).get();
 
-        return ResponseEntity.status(201).body(new SuccessGameResponse(freshGame, new Message("success", "Game created")));
+        return ResponseEntity.status(201).body(new RegisterGameResponse(freshGame, new Message("success", "Game created")));
     }
 
     public ResponseEntity<InfoMessage> updateGameField(Long gameId, UpdField updField, String authHeader) {

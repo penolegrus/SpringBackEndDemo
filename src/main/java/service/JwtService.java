@@ -1,6 +1,6 @@
 package service;
 
-import db_models.User;
+import models.user.User;
 import jwt.config.JwtTokenUtil;
 import org.springframework.stereotype.Service;
 import repo.UserRepository;

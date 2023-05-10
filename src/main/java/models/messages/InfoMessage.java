@@ -1,14 +1,17 @@
-package dto;
+package models.messages;
 
-import db_models.game.Game;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import models.Message;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SuccessGameResponse {
-    private Game register_data;
+public class InfoMessage {
+
     private Message info;
+
+    public InfoMessage(String status, String message){
+        info = new Message(status,message);
+    }
 }

@@ -1,13 +1,12 @@
 package repo;
 
-import db_models.game.Game;
+import models.game.Game;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Transient;
 import javax.transaction.Transactional;
 
 

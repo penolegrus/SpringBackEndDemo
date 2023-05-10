@@ -1,7 +1,7 @@
-package db_models;
+package models.user;
 
 
-import db_models.game.Game;
+import models.game.Game;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,7 +13,7 @@ public class User {
     private Long id;
     private String login;
     private String pass;
-    @ElementCollection(targetClass= Game.class)
+    @ElementCollection(targetClass = Game.class)
     @OneToMany(cascade = CascadeType.ALL)
     private List<Game> games;
 

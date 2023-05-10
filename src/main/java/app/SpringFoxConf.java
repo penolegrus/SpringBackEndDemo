@@ -9,6 +9,7 @@ import models.game.RegisterGameResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.service.*;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -33,9 +34,7 @@ public class SpringFoxConf {
                         typeResolver.resolve(JwtResponse.class)
                 )
                 .apiInfo(metadata())
-             //   .securitySchemes(Collections.singletonList(apiKey()))
-             //   .securityContexts(Collections.singletonList(securityContext()))
-                .select().apis(RequestHandlerSelectors.any())
+                .select().apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
                 .paths(PathSelectors.any()).build();
     }
 

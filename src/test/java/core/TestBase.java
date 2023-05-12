@@ -20,7 +20,7 @@ public class TestBase {
 
     @BeforeAll
     static void setUpTests() {
-        RestAssured.baseURI = "http://localhost:8080/api";
+        RestAssured.baseURI = "http://85.192.34.140:8080/api";
         userService = new UserService();
     }
     @BeforeEach

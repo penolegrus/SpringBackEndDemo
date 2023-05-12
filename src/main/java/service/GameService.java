@@ -14,6 +14,7 @@ import repo.GameRepository;
 import repo.UserRepository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class GameService extends JwtService {
         this.userRepository = userRepository1;
     }
 
-    public ResponseEntity<List<Game>> getGames(String authHeader) {
+    public ResponseEntity<Collection<Game>> getGames(String authHeader) {
         User user = getUserFromJwt(authHeader);
         return ResponseEntity.status(200).body(user.getGames());
     }
@@ -181,7 +182,7 @@ public class GameService extends JwtService {
             }
         }
 
-        List<DLC> dlcs = game.getDlcs();
+        Collection<DLC> dlcs = game.getDlcs();
         for (DLC dlc : dlcs) {
             if (dlc.getIsDlcFree()) {
                 if (!dlc.getPrice().equals(0.0)) {

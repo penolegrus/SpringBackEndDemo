@@ -1,20 +1,32 @@
 package models.user;
 
 
+import groovy.transform.ToString;
 import models.game.Game;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
+@ToString
+@Table(name = "user", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "id"),
+        @UniqueConstraint(columnNames = "login")
+})
 public class User {
     @Id
     @GeneratedValue
+    @Column(name = "id")
     private Long id;
+    @Column(name = "login", unique = true)
     private String login;
+    @Column(name = "pass")
     private String pass;
     @ElementCollection(targetClass = Game.class)
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "user_games")
     private List<Game> games;
 
     public User() {
@@ -61,5 +73,18 @@ public class User {
 
     public void setGames(List<Game> games) {
         this.games = games;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return getId() != null && Objects.equals(getId(), user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

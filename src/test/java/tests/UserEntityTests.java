@@ -2,6 +2,9 @@ package tests;
 
 import assections.Conditions;
 import core.TestBase;
+import helpers.Utils;
+import io.restassured.http.ContentType;
+import models.game.Game;
 import models.user.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,24 +13,25 @@ import java.io.File;
 import java.util.*;
 
 import static assections.Conditions.*;
+import static io.restassured.RestAssured.given;
 import static testdata.TestData.ADMIN_USER;
 
 
-public class UserTests extends TestBase {
+public class UserEntityTests extends TestBase {
 
-//    @Test
-//    public void addDbTest(){
-//        List<Game> games = new ArrayList<>();
-//        for (int i = 0; i < 1; i++) {
-//            games.add(Utils.generateGameForDb(false));
-//        }
-//
-//        UserDTO userDTO = new UserDTO("threadqa", "threadqa", games);
-//        given().contentType(ContentType.JSON)
-//                .body(userDTO)
-//                .post("http://localhost:8080/api/signup")
-//                .then().log().all();
-//    }
+    @Test
+    public void addDbTest(){
+        List<Game> games = new ArrayList<>();
+        for (int i = 0; i < 1; i++) {
+            games.add(Utils.generateGameForDb(false));
+        }
+
+        User userDTO = new User("demo", "demo", games);
+        given().contentType(ContentType.JSON)
+                .body(userDTO)
+                .post("http://localhost:8080/api/signup")
+                .then().log().all();
+    }
 
 //    @Test
 //    public void updatePassTest(){

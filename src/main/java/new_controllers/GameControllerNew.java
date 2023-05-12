@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import service.GameService;
 
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -35,7 +36,7 @@ public class GameControllerNew {
 
     @GetMapping(path = "/api/user/games", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<List<Game>> getGames(@Parameter(description = "Jwt токен")
+    public ResponseEntity<Collection<Game>> getGames(@Parameter(description = "Jwt токен")
                                                @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         return gameService.getGames(authHeader);
     }

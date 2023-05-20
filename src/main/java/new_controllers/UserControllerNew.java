@@ -26,7 +26,8 @@ public class UserControllerNew {
     private final UserService userService;
 
     @PostMapping(path = "/api/signup", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Регистрация нового пользователя")
+    @Operation(summary = "Регистрация нового пользователя", description = "Обязательные поля login и pass только. " +
+            "Список с играми может отсутсвовать у пользователя при регистрации, их можно добавить потом")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",

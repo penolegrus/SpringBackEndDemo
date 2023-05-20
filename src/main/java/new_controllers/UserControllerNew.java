@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import models.messages.InfoMessage;
 import models.user.ChangeUserPass;
 import models.user.RegisterUserResponse;
+import models.user.UserDTO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class UserControllerNew {
                     description = "Ошибка регистрации, неверные поля",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = InfoMessage.class)))
     })
-    public ResponseEntity<?> addUser(@RequestBody User userDTO) {
+    public ResponseEntity<?> addUser(@RequestBody UserDTO userDTO) {
         return userService.signUp(userDTO);
     }
 

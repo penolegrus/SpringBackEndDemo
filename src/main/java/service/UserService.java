@@ -7,10 +7,12 @@ import jwt.config.JwtTokenUtil;
 import models.messages.InfoMessage;
 import models.messages.Message;
 import models.user.ChangeUserPass;
+import models.user.UserDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import repo.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,12 +23,17 @@ public class UserService extends JwtService {
         super(userRepository, jwtTokenUtil);
     }
 
-    public ResponseEntity<?> signUp(User userDTO) {
+    public ResponseEntity<?> signUp(UserDTO userDTO) {
         if(userDTO.getLogin() == null || userDTO.getPass() == null){
             return ResponseEntity.status(400).body(new InfoMessage("fail", "Missing login or password"));
         }
         if (!userRepository.existsByLogin(userDTO.getLogin())) {
-            User user = new User(userDTO.getLogin(), userDTO.getPass(), userDTO.getGames());
+            User user = null;
+            if(userDTO.getGames() == null){
+                user = new User(userDTO.getLogin(), userDTO.getPass(), new ArrayList<>());
+            } else {
+                user = new User(userDTO.getLogin(), userDTO.getPass(), userDTO.getGames());
+            }
             if(user.getGames().size() > 20){
                 return ResponseEntity.status(201).body(new InfoMessage("fail", "User cant have more than 20 games on registration"));
             }
